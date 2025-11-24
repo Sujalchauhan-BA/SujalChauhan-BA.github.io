@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sujal Chauhan | Senior Business Analyst</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,11 +12,11 @@
 
     <nav id="navbar">
         <div class="container nav-container">
-            <a href="#home" class="logo">S.Chauhan<span>.</span></a>
+            <a href="#home" class="logo">Sujal Chauhan<span class="dot">.</span></a>
             <ul class="nav-links">
-                <li><a href="#about">Summary</a></li>
-                <li><a href="#skills">Competencies</a></li>
-                <li><a href="#experience">Experience</a></li>
+                <li><a href="#about">Profile</a></li>
+                <li><a href="#skills">Expertise</a></li>
+                <li><a href="#experience">Timeline</a></li>
                 <li><a href="#portfolio">Case Study</a></li>
                 <li><a href="#credentials">Credentials</a></li>
                 <li><a href="#contact" class="btn-nav">Contact</a></li>
@@ -30,26 +30,33 @@
     <section id="home" class="hero">
         <div class="container hero-content fade-in">
             <div class="profile-frame">
-                <img src="https://via.placeholder.com/250" alt="Sujal Chauhan" class="profile-img">
+                <img src="https://ui-avatars.com/api/?name=Sujal+Chauhan&background=f59e0b&color=0f172a&size=256&font-size=0.33" alt="Sujal Chauhan" class="profile-img">
             </div>
-            <h1>Sujal Chauhan <span class="credentials">PMP®, CSM®</span></h1>
-            <h2>Senior Business Analyst | Cloud & Data Enthusiast</h2>
-            <p class="tagline">Kitchener, Ontario • Bridging Business Goals with Technical Solutions.</p>
+            <h1>Sujal Chauhan</h1>
+            <h2 class="hero-role">Senior Business Analyst</h2>
+            <p class="tagline">Transforming Complex Business Needs into Strategic Technical Solutions.</p>
+            
             <div class="hero-btns">
-                <a href="#portfolio" class="btn btn-primary">View Case Study</a>
+                <a href="#experience" class="btn btn-primary">View Experience</a>
                 <a href="resume.pdf" download class="btn btn-outline"><i class="fas fa-download"></i> Download Resume</a>
             </div>
+        </div>
+        
+        <div class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
         </div>
     </section>
 
     <section id="about" class="section-padding">
         <div class="container">
-            <h2 class="section-title fade-in">Professional Summary</h2>
-            <div class="about-grid fade-in">
-                <div class="about-text full-width-text">
-                    <p>Strategic and analytical <strong>Senior Business Analyst</strong> with over 15 years of experience bridging the gap between business goals and technical solutions. Expert in <strong>requirements elicitation, process modeling (BPMN), and data-driven decision making</strong> within Agile and Cloud (Azure) environments.</p>
-                    <p>I specialize in translating complex business needs into clear functional specifications (FRD/BRD), optimizing ERP/CRM workflows, and driving digital transformation. Adept at utilizing <strong>SQL, Power BI, and Azure Logic Apps</strong> to deliver actionable insights. As a <strong>PMP® and CSM®</strong> certified professional, I combine rigorous project governance with Agile flexibility to lead cross-functional teams and deliver high-value solutions.</p>
-                </div>
+            <div class="summary-card fade-in">
+                <h2 class="section-title">Executive Profile</h2>
+                <p>
+                    Distinguished <strong>Senior Business Analyst</strong> with over 15 years of expertise in driving digital transformation and process optimization. I bridge the gap between executive vision and technical execution, utilizing data-driven strategies to solve complex organizational challenges. 
+                </p>
+                <p>
+                    My approach combines rigorous project governance with Agile adaptability, ensuring stakeholder alignment and measurable ROI. From legacy system migrations to cloud-native integrations, I specialize in translating ambiguous business requirements into precise, scalable technical architectures.
+                </p>
             </div>
         </div>
     </section>
@@ -57,100 +64,112 @@
     <section id="skills" class="section-padding bg-dark">
         <div class="container">
             <h2 class="section-title fade-in">Core Competencies</h2>
-            <div class="skills-grid four-col">
-                <div class="skill-card fade-in">
-                    <i class="fas fa-chess-knight"></i>
-                    <h3>BA & Strategy</h3>
-                    <ul class="skill-list">
-                        <li>Requirements Lifecycle (SDLC)</li>
-                        <li>Gap Analysis & BRD/FRD</li>
-                        <li>BPMN & Workflow Automation</li>
-                        <li>ROI & Cost-Benefit Analysis</li>
-                        <li>Feasibility Studies</li>
-                    </ul>
-                </div>
-                <div class="skill-card fade-in">
-                    <i class="fas fa-database"></i>
-                    <h3>Technical & Data</h3>
-                    <ul class="skill-list">
-                        <li>Azure Fundamentals & Logic Apps</li>
-                        <li>API Integration Concepts</li>
-                        <li>Power BI & Advanced Excel</li>
-                        <li>SQL Data Querying</li>
-                        <li>JIRA, Confluence, Visio</li>
-                    </ul>
-                </div>
-                <div class="skill-card fade-in">
-                    <i class="fas fa-users"></i>
-                    <h3>Leadership</h3>
-                    <ul class="skill-list">
+            <div class="skills-wrapper">
+                
+                <div class="skill-category fade-in">
+                    <div class="cat-header">
+                        <i class="fas fa-brain"></i>
+                        <h3>Strategic Analysis</h3>
+                    </div>
+                    <ul class="skill-tags">
+                        <li>Requirements Elicitation</li>
+                        <li>Gap Analysis</li>
+                        <li>Business Process Modeling (BPMN)</li>
+                        <li>ROI & Feasibility Studies</li>
+                        <li>Workflow Optimization</li>
                         <li>Stakeholder Management</li>
-                        <li>Scrum Framework & Sprint Planning</li>
-                        <li>User Adoption Strategies</li>
-                        <li>Conflict Resolution</li>
-                        <li>Vendor Management</li>
                     </ul>
                 </div>
-                <div class="skill-card fade-in">
-                    <i class="fas fa-industry"></i>
-                    <h3>Industry Knowledge</h3>
-                    <ul class="skill-list">
-                        <li>Banking & FinTech (KYC/AML)</li>
-                        <li>Supply Chain & Logistics</li>
-                        <li>Telecom & Interconnection</li>
-                        <li>ERP Implementation</li>
-                        <li>IT Asset Disposition (ITAD)</li>
+
+                <div class="skill-category fade-in">
+                    <div class="cat-header">
+                        <i class="fas fa-database"></i>
+                        <h3>Technical Proficiency</h3>
+                    </div>
+                    <ul class="skill-tags">
+                        <li>SQL & Data Modeling</li>
+                        <li>Azure Cloud Fundamentals</li>
+                        <li>API Integration Concepts</li>
+                        <li>Tableau & Power BI</li>
+                        <li>ETL Concepts</li>
+                        <li>System Architecture</li>
                     </ul>
                 </div>
+
+                <div class="skill-category fade-in">
+                    <div class="cat-header">
+                        <i class="fas fa-tasks"></i>
+                        <h3>Methodologies & Tools</h3>
+                    </div>
+                    <ul class="skill-tags">
+                        <li>Agile & Scrum</li>
+                        <li>SDLC Management</li>
+                        <li>JIRA & Confluence</li>
+                        <li>MS Visio & Lucidchart</li>
+                        <li>Microsoft Dynamics 365</li>
+                        <li>User Acceptance Testing (UAT)</li>
+                    </ul>
+                </div>
+
             </div>
         </div>
     </section>
 
     <section id="experience" class="section-padding">
         <div class="container">
-            <h2 class="section-title fade-in">Professional Experience</h2>
+            <h2 class="section-title fade-in">Professional Timeline</h2>
             <div class="timeline">
                 
                 <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="date">March 2025 – Present | Mississauga, ON</span>
-                        <h3>Senior Business Analyst</h3>
-                        <h4>BigLop</h4>
-                        <ul class="experience-list">
-                            <li><strong>ERP Requirements Engineering:</strong> Led end-to-end elicitation for banking ERP replacement; mapped legacy to "TO-BE" workflows aligned with regulatory standards.</li>
-                            <li><strong>Azure Migration:</strong> Partnered with architects to map dependencies for migrating 12 critical apps to Azure, defining security access controls.</li>
-                            <li><strong>Process Automation:</strong> Designed Azure Logic Apps flows for KYC verification, reducing cycle time by <strong>45%</strong>.</li>
-                            <li><strong>Data-Driven Decisions:</strong> Created executive Power BI dashboards, reducing manual reporting by <strong>40 hours/month</strong>.</li>
-                            <li><strong>Agile Product Ownership:</strong> Managed product backlog and refined User Stories, improving team velocity by <strong>25%</strong>.</li>
+                        <div class="role-header">
+                            <h3>Senior Business Analyst</h3>
+                            <h4>BigLop</h4>
+                        </div>
+                        <span class="date">March 2025 – Present</span>
+                        <p class="role-summary">Leading ERP requirements engineering and Azure cloud migration strategies for enterprise banking solutions.</p>
+                        <ul>
+                            <li>Spearhead end-to-end elicitation for banking ERP replacement, mapping legacy processes to regulatory-compliant "TO-BE" workflows.</li>
+                            <li>Partner with solution architects to map dependencies for migrating 12 business-critical applications to Microsoft Azure.</li>
+                            <li>Design architectural process flows for automated KYC verification using Azure Logic Apps.</li>
+                            <li>Define KPIs and data models for executive Power BI dashboards to visualize compliance rates.</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="date">April 2021 – Feb 2025 | Brampton, ON</span>
-                        <h3>Business Analyst</h3>
-                        <h4>Quantum Lifecycle Partners LP</h4>
-                        <ul class="experience-list">
-                            <li><strong>E-Commerce Definition:</strong> Created specs for B2C platform, contributing to a <strong>25% increase</strong> in secondary revenue.</li>
-                            <li><strong>CRM Integration:</strong> Managed Microsoft Dynamics 365 integration; conducted gap analysis for seamless data sync.</li>
-                            <li><strong>Operational Intelligence:</strong> Built Power BI dashboards for inventory tracking, improving revenue forecasting accuracy by <strong>30%</strong>.</li>
-                            <li><strong>Workflow Optimization:</strong> Analyzed ITAD workflows, identifying bottlenecks to reduce delivery timelines by <strong>15-20%</strong>.</li>
-                            <li><strong>Sprints & Governance:</strong> Facilitated Agile sprints with IT/Logistics, minimizing go-live delays.</li>
+                        <div class="role-header">
+                            <h3>Business Analyst</h3>
+                            <h4>Quantum Lifecycle Partners LP</h4>
+                        </div>
+                        <span class="date">April 2021 – February 2025</span>
+                        <p class="role-summary">Focused on E-Commerce product definition, CRM integration, and operational intelligence.</p>
+                        <ul>
+                            <li>Gathered and prioritized requirements for a new B2C e-commerce platform, creating wireframes that guided development.</li>
+                            <li>Facilitated the integration of Microsoft Dynamics 365 with production workflows via gap analysis.</li>
+                            <li>Modeled complex inventory data to build Power BI dashboards for customer lifecycle tracking.</li>
+                            <li>Identified bottlenecks in IT Asset Disposition (ITAD) workflows, authoring process changes that reduced delivery timelines.</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="date">Jan 2014 – Sept 2018 | Ahmedabad, India</span>
-                        <h3>Senior Business Analyst</h3>
-                        <h4>Progressive Telecom LLC</h4>
-                        <ul class="experience-list">
-                            <li><strong>Business Case Development:</strong> Authored feasibility studies and ROI projections for new interconnection opportunities.</li>
-                            <li><strong>Process Re-engineering:</strong> Optimized telecom interconnection workflows to improve deployment time and service quality.</li>
-                            <li><strong>Contract Analysis:</strong> Analyzed multimillion-dollar bilateral agreements, ensuring technical and commercial compliance.</li>
-                            <li><strong>Regulatory Compliance:</strong> Monitored international regulations to safeguard business stability.</li>
+                        <div class="role-header">
+                            <h3>Senior Business Analyst</h3>
+                            <h4>Progressive Telecom LLC</h4>
+                        </div>
+                        <span class="date">January 2014 – September 2018</span>
+                        <p class="role-summary">Managed complex telecom interconnection workflows and international regulatory compliance.</p>
+                        <ul>
+                            <li>Conducted comprehensive feasibility studies and authored data-driven business cases for interconnection opportunities.</li>
+                            <li>Mapped end-to-end telecom workflows, identifying redundancies to optimize deployment time.</li>
+                            <li>Analyzed multimillion-dollar bilateral agreements to ensure commercial and technical viability.</li>
+                            <li>Acted as primary liaison between operations, finance, and technical specialists.</li>
                         </ul>
                     </div>
                 </div>
@@ -161,106 +180,106 @@
 
     <section id="portfolio" class="section-padding bg-dark">
         <div class="container">
-            <h2 class="section-title fade-in">Portfolio Case Study</h2>
-            <div class="case-study-card fade-in">
-                <div class="cs-header">
+            <h2 class="section-title fade-in">Project Highlight</h2>
+            
+            <div class="case-study-container fade-in">
+                <div class="cs-sidebar">
                     <h3>Automated KYC Verification System</h3>
-                    <div class="cs-tags">
-                        <span>FinTech</span>
-                        <span>Azure Logic Apps</span>
-                        <span>Power BI</span>
-                        <span>BPMN</span>
+                    <div class="cs-meta">
+                        <span><strong>Domain:</strong> FinTech / Banking</span>
+                        <span><strong>Tech:</strong> Azure Logic Apps, SQL, Power BI</span>
+                        <span><strong>Role:</strong> Lead BA</span>
                     </div>
                 </div>
                 
-                <div class="cs-body">
-                    <div class="cs-section">
-                        <h4><i class="fas fa-exclamation-circle"></i> The Challenge</h4>
-                        <p>The client operated on a legacy banking platform where KYC verification was manual and paper-heavy. This resulted in slow onboarding, high human error risk, and stakeholders spending <strong>40+ hours/month</strong> compiling reports.</p>
+                <div class="cs-main">
+                    <div class="cs-block">
+                        <h4><i class="fas fa-exclamation-triangle"></i> The Problem</h4>
+                        <p>Client operated on a legacy banking platform where Know Your Customer (KYC) verification was manual. Stakeholders spent <strong>40+ hours/month</strong> manually compiling reports, with high risk of human error.</p>
                     </div>
 
-                    <div class="cs-section">
-                        <h4><i class="fas fa-lightbulb"></i> The Approach (BA Lifecycle)</h4>
-                        <ul>
-                            <li><strong>Discovery:</strong> Workshops with Compliance/Ops teams to define regulatory needs.</li>
-                            <li><strong>Modeling (BPMN):</strong> Mapped "AS-IS" bottlenecks vs. "TO-BE" event-driven architecture.</li>
-                            <li><strong>Requirements:</strong> Authored FRDs for Azure Logic App triggers (auto-approve if confidence > 90%).</li>
-                        </ul>
+                    <div class="cs-block">
+                        <h4><i class="fas fa-lightbulb"></i> The Strategy</h4>
+                        <p>Led workshops to define regulatory needs and modeled the "TO-BE" event-driven architecture. Authored FRDs for Azure Logic App triggers to auto-approve low-risk applications.</p>
                     </div>
 
-                    <div class="cs-section">
-                        <h4><i class="fas fa-rocket"></i> The Solution</h4>
-                        <p>Implemented a <strong>Serverless Cloud Solution</strong> using Microsoft Azure. Logic Apps orchestrated the workflow between customer portals and the ERP, while Power BI provided live C-suite dashboards.</p>
-                    </div>
-
-                    <div class="cs-results">
-                        <div class="cs-stat">
-                            <h5>45%</h5>
-                            <p>Reduction in Cycle Time</p>
-                        </div>
-                        <div class="cs-stat">
-                            <h5>40 Hrs</h5>
-                            <p>Saved Monthly</p>
-                        </div>
-                        <div class="cs-stat">
-                            <h5>100%</h5>
-                            <p>Visibility via Dashboards</p>
-                        </div>
-                    </div>
-
-                    <div class="cs-visual">
-                         <div class="placeholder-diagram">
-                            <i class="fas fa-project-diagram"></i>
-                            <p>[Visual: BPMN Diagram illustrating flow: Document Upload -> Azure Logic App -> ERP Update]</p>
+                    <div class="cs-block result-block">
+                        <h4><i class="fas fa-chart-line"></i> The Impact</h4>
+                        <div class="cs-stats-grid">
+                            <div class="stat">
+                                <span class="num">45%</span>
+                                <span class="lbl">Faster Cycle Time</span>
+                            </div>
+                            <div class="stat">
+                                <span class="num">40hrs</span>
+                                <span class="lbl">Saved Monthly</span>
+                            </div>
+                            <div class="stat">
+                                <span class="num">100%</span>
+                                <span class="lbl">Data Visibility</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 
     <section id="credentials" class="section-padding">
         <div class="container">
-            <h2 class="section-title fade-in">Credentials & Education</h2>
-            <div class="cred-grid fade-in">
-                <div class="cred-column">
-                    <h3><i class="fas fa-certificate"></i> Certifications</h3>
-                    <ul class="cred-list">
-                        <li>
-                            <strong>Project Management Professional (PMP)®</strong>
+            <h2 class="section-title fade-in">Credentials & Academics</h2>
+            
+            <div class="credentials-grid fade-in">
+                
+                <div class="cred-col">
+                    <h3 class="col-title"><i class="fas fa-certificate"></i> Certifications</h3>
+                    <div class="cred-item">
+                        <div class="cred-icon">PMP</div>
+                        <div class="cred-info">
+                            <h4>Project Management Professional (PMP)®</h4>
                             <span>Project Management Institute (PMI)</span>
-                        </li>
-                        <li>
-                            <strong>Certified ScrumMaster (CSM®)</strong>
+                        </div>
+                    </div>
+                    <div class="cred-item">
+                        <div class="cred-icon">CSM</div>
+                        <div class="cred-info">
+                            <h4>Certified ScrumMaster (CSM)®</h4>
                             <span>Scrum Alliance</span>
-                        </li>
-                        <li>
-                            <strong>Microsoft Certified: Azure Fundamentals (AZ-900)</strong>
+                        </div>
+                    </div>
+                    <div class="cred-item">
+                        <div class="cred-icon">AZ</div>
+                        <div class="cred-info">
+                            <h4>Azure Fundamentals (AZ-900)</h4>
                             <span>Microsoft</span>
-                        </li>
-                        <li>
-                            <strong>Certified Business Analysis Professional (CBAP)</strong>
-                            <span>IIBA (Currently Pursuing)</span>
-                        </li>
-                        <li>
-                            <strong>Salesforce for Customer Service</strong>
-                            <span>LinkedIn Learning</span>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
+                    <div class="cred-item">
+                        <div class="cred-icon">CBAP</div>
+                        <div class="cred-info">
+                            <h4>Certified Business Analysis Professional</h4>
+                            <span>IIBA (Pursuing)</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="cred-column">
-                    <h3><i class="fas fa-graduation-cap"></i> Education</h3>
-                    <ul class="cred-list">
-                        <li>
-                            <strong>Bachelor of Business Management (BBM)</strong>
+
+                <div class="cred-col">
+                    <h3 class="col-title"><i class="fas fa-graduation-cap"></i> Education</h3>
+                    <div class="cred-item">
+                        <div class="cred-info">
+                            <h4>Bachelor of Business Management (BBM)</h4>
                             <span>Mangalam School of Management (2013-2016)</span>
-                        </li>
-                        <li>
-                            <strong>Diploma in International Marketing</strong>
+                        </div>
+                    </div>
+                    <div class="cred-item">
+                        <div class="cred-info">
+                            <h4>Diploma in International Marketing</h4>
                             <span>Ahmedabad Management Association (2013)</span>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -268,7 +287,7 @@
     <footer id="contact">
         <div class="container footer-content">
             <h2>Let's Discuss Strategy</h2>
-            <p>Open to discussing how my analytical expertise can drive your next project.</p>
+            <p>Ready to bring senior-level analysis and clarity to your projects.</p>
             <div class="social-links">
                 <a href="mailto:your-email@example.com" class="social-btn"><i class="fas fa-envelope"></i> Email Me</a>
                 <a href="https://linkedin.com/in/yourprofile" target="_blank" class="social-btn"><i class="fab fa-linkedin"></i> LinkedIn</a>
