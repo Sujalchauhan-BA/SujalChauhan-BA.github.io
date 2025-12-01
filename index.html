@@ -1165,10 +1165,11 @@
         </div>
     </section>
 
-    <footer>
+<footer>
         <div class="container text-center" style="padding: 40px 0; border-top: 1px solid var(--border);">
             <p style="color: var(--text-gray); font-size: 0.85rem;">
-                &copy; 2025 Sujal Chauhan. All Rights Reserved.
+                &copy; 2025 Sujal Chauhan. All Rights Reserved. <br>
+                <a href="javascript:void(0)" onclick="togglePrivacy()" style="color: var(--text-gray); text-decoration: underline; margin-top: 10px; display: inline-block;">Privacy Policy</a>
             </p>
         </div>
     </footer>
@@ -1185,6 +1186,101 @@
                 }
             });
         });
+    </script>
+    <div id="privacyModal" class="privacy-modal">
+        <div class="privacy-content">
+            <span class="close-modal" onclick="togglePrivacy()">&times;</span>
+            <h3>Privacy Policy</h3>
+            <div style="width: 50px; height: 3px; background: var(--accent); margin: 10px 0 20px;"></div>
+            
+            <p><strong>1. Data Collection</strong><br>
+            This website collects data to improve user experience and facilitate communication. By using this site, you consent to the use of the following tools:</p>
+
+            <ul>
+                <li><strong>Google Analytics (GA4):</strong> Collects anonymous usage data (pages visited, session duration) to help analyze site traffic[cite: 138].</li>
+                <li><strong>Microsoft Clarity:</strong> Records session heatmaps and interactions to understand user behavior and improve site usability[cite: 139].</li>
+                <li><strong>Formspree:</strong> When you submit the contact form, your name, email, and message are securely transmitted to me via email for the purpose of replying to your inquiry.</li>
+                <li><strong>Calendly:</strong> If you schedule a meeting, your appointment details are processed by Calendly to manage the booking.</li>
+            </ul>
+
+            <p><strong>2. Cookies</strong><br>
+            We use cookies to ensure the proper functioning of analytics tools. You may disable cookies in your browser settings, though this may affect site performance.</p>
+
+            <p><strong>3. Your Rights</strong><br>
+            Your data is never sold to third parties. If you wish to request the deletion of your personal communication data, please contact me directly at <a href="mailto:sujal.chauhan@live.in" style="color: var(--accent);">sujal.chauhan@live.in</a>[cite: 269].</p>
+        </div>
+    </div>
+
+    <style>
+        /* Modal Styles matching the Dark Theme */
+        .privacy-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(10, 15, 28, 0.95); /* High opacity dark background */
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s;
+        }
+
+        .privacy-content {
+            background-color: var(--secondary);
+            margin: 10% auto;
+            padding: 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .privacy-content h3 { color: var(--white); margin-top: 0; }
+        .privacy-content strong { color: var(--text-light); }
+        .privacy-content ul { padding-left: 20px; margin-bottom: 20px; }
+        .privacy-content li { margin-bottom: 10px; }
+
+        .close-modal {
+            color: var(--text-gray);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-modal:hover { color: var(--accent); }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+
+    <script>
+        // Toggle Function
+        function togglePrivacy() {
+            var modal = document.getElementById("privacyModal");
+            if (modal.style.display === "block") {
+                modal.style.display = "none";
+            } else {
+                modal.style.display = "block";
+            }
+        }
+
+        // Close when clicking outside
+        window.onclick = function(event) {
+            var modal = document.getElementById("privacyModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
