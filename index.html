@@ -1297,74 +1297,78 @@
     </script>
     <div id="fx-widget" style="
     font-family: 'Segoe UI', sans-serif; 
-    background: #f8f9fa; 
-    border-left: 5px solid #0078d4; 
+    background: #ffffff; 
+    border-top: 4px solid #d32f2f; /* Red for Canada */
     padding: 20px; 
     margin: 20px 0; 
     border-radius: 4px; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    max-width: 600px;">
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 650px;">
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="margin: 0; color: #333;">🌎 Global FX Rates</h3>
-        <span id="fx-status" style="font-size: 12px; color: #666;">Connecting to API...</span>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <h3 style="margin: 0; color: #333;">🇨🇦 CAD Exchange Rates</h3>
+        <span id="fx-status" style="font-size: 12px; font-weight: 600; color: #666;">Connecting...</span>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
         
-        <div style="background: white; padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-            <div style="font-size: 12px; color: #888; margin-bottom: 5px;">USD 🇺🇸 ➔ CAD 🇨🇦</div>
-            <div id="rate-cad" style="font-size: 20px; font-weight: bold; color: #2e7d32;">---</div>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 5px;">CAD ➔ USD 🇺🇸</div>
+            <div id="rate-usd" style="font-size: 22px; font-weight: 700; color: #2e7d32;">---</div>
         </div>
 
-        <div style="background: white; padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-            <div style="font-size: 12px; color: #888; margin-bottom: 5px;">USD 🇺🇸 ➔ EUR 🇪🇺</div>
-            <div id="rate-eur" style="font-size: 20px; font-weight: bold; color: #1565c0;">---</div>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 5px;">CAD ➔ INR 🇮🇳</div>
+            <div id="rate-inr" style="font-size: 22px; font-weight: 700; color: #d84315;">---</div>
         </div>
 
-        <div style="background: white; padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-            <div style="font-size: 12px; color: #888; margin-bottom: 5px;">USD 🇺🇸 ➔ GBP 🇬🇧</div>
-            <div id="rate-gbp" style="font-size: 20px; font-weight: bold; color: #d84315;">---</div>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 5px;">CAD ➔ GBP 🇬🇧</div>
+            <div id="rate-gbp" style="font-size: 22px; font-weight: 700; color: #1565c0;">---</div>
         </div>
 
     </div>
-    <div style="margin-top: 10px; font-size: 10px; color: #999; text-align: right;">
-        Source: European Central Bank via Frankfurter API
+    <div style="margin-top: 15px; font-size: 11px; color: #aaa; text-align: right;">
+        Live Data via Frankfurter API • Base: Canadian Dollar
     </div>
 </div>
 
 <script>
-    async function initFintechDashboard() {
+    async function initCanadianDashboard() {
         const statusLabel = document.getElementById('fx-status');
         
         try {
-            // 1. THE API CALL
-            // Fetching live rates for 1 USD against CAD, EUR, GBP
-            const response = await fetch('https://api.frankfurter.app/latest?amount=1&from=USD&to=CAD,EUR,GBP');
+            // 1. API CALL (Modified for CAD Base)
+            // asking: "If I have 1 CAD, how much is it in USD, INR, GBP?"
+            const response = await fetch('https://api.frankfurter.app/latest?amount=1&from=CAD&to=USD,INR,GBP');
             
-            // 2. ERROR HANDLING (BA Best Practice)
-            if (!response.ok) throw new Error("Data Source Unavailable");
+            if (!response.ok) throw new Error("API Unavailable");
 
-            // 3. DATA PROCESSING
             const data = await response.json();
-            const date = data.date; // The date the rates were last updated
             
-            // 4. UI UPDATE
-            document.getElementById('rate-cad').innerText = "$" + data.rates.CAD;
-            document.getElementById('rate-eur').innerText = "€" + data.rates.EUR;
-            document.getElementById('rate-gbp').innerText = "£" + data.rates.GBP;
+            // 2. PARSING & FORMATTING
+            // USD usually needs 3 decimals for precision in FX, but 2 is standard for display
+            // INR usually looks better with 2 decimals
+            const usdVal = data.rates.USD.toFixed(3); 
+            const inrVal = data.rates.INR.toFixed(2);
+            const gbpVal = data.rates.GBP.toFixed(3);
+
+            // 3. UI UPDATE
+            document.getElementById('rate-usd').innerText = "$" + usdVal;
+            document.getElementById('rate-inr').innerText = "₹" + inrVal;
+            document.getElementById('rate-gbp').innerText = "£" + gbpVal;
             
-            statusLabel.innerHTML = "✅ Live Data • Updated: " + date;
+            statusLabel.innerHTML = "🟢 Market Open";
+            statusLabel.style.color = "green";
             
         } catch (error) {
-            console.error("API Error:", error);
-            statusLabel.innerHTML = "⚠️ System Offline (API unavailable)";
+            console.error(error);
+            statusLabel.innerHTML = "🔴 Data Offline";
             statusLabel.style.color = "red";
         }
     }
 
-    // Initialize the dashboard
-    initFintechDashboard();
+    initCanadianDashboard();
 </script>
 </body>
 </html>
