@@ -1295,80 +1295,179 @@
             }
         }
     </script>
-    <div id="fx-widget" style="
-    font-family: 'Segoe UI', sans-serif; 
-    background: #ffffff; 
-    border-top: 4px solid #d32f2f; /* Red for Canada */
-    padding: 20px; 
-    margin: 20px 0; 
-    border-radius: 4px; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    max-width: 650px;">
+<style>
+    /* THEME CONFIGURATION 
+       Adjust these 3 colors to match your website perfectly */
+    :root {
+        --widget-accent: #2c3e50; /* Your site's header color (Dark Blue/Grey) */
+        --widget-bg: #ffffff;     /* Card background */
+        --widget-text: #333333;   /* Primary text color */
+        --positive-green: #27ae60;
+    }
+
+    /* The Container */
+    .market-card {
+        font-family: inherit; /* Matches your website's font automatically */
+        background: var(--widget-bg);
+        border: 1px solid rgba(0,0,0,0.1); /* Subtle border */
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        padding: 25px;
+        margin: 40px auto; /* Centers it with space */
+        max-width: 800px;
+        text-align: left;
+    }
+
+    /* The Header Area */
+    .market-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--widget-accent);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .market-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--widget-accent);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .market-status {
+        font-size: 0.85rem;
+        color: #888;
+        font-weight: 500;
+    }
+
+    /* The Grid Layout */
+    .currency-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    /* Individual Currency Box */
+    .currency-item {
+        background: rgba(0,0,0,0.02); /* Very subtle grey for contrast */
+        padding: 15px;
+        border-radius: 6px;
+        transition: transform 0.2s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .currency-item:hover {
+        transform: translateY(-2px);
+        background: rgba(0,0,0,0.04);
+        border-left: 3px solid var(--widget-accent);
+    }
+
+    .pair-label {
+        font-size: 0.8rem;
+        color: #666;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .exchange-rate {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--widget-text);
+    }
+
+    .trend-indicator {
+        font-size: 0.8rem;
+        color: var(--positive-green);
+        margin-left: 5px;
+    }
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-        <h3 style="margin: 0; color: #333;">🇨🇦 CAD Exchange Rates</h3>
-        <span id="fx-status" style="font-size: 12px; font-weight: 600; color: #666;">Connecting...</span>
+    /* Responsive tweaks for mobile */
+    @media (max-width: 600px) {
+        .market-header { flex-direction: column; align-items: flex-start; }
+        .market-status { margin-top: 5px; }
+    }
+</style>
+
+<div class="market-card">
+    <div class="market-header">
+        <span class="market-title">🇨🇦 Live Exchange Rates</span>
+        <span id="market-status" class="market-status">initializing...</span>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
+    <div class="currency-grid">
         
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 5px;">CAD ➔ USD 🇺🇸</div>
-            <div id="rate-usd" style="font-size: 22px; font-weight: 700; color: #2e7d32;">---</div>
+        <div class="currency-item">
+            <span class="pair-label">USA (USD)</span>
+            <div style="display: flex; align-items: baseline;">
+                <span id="val-usd" class="exchange-rate">---</span>
+                <span class="trend-indicator">🇺🇸</span>
+            </div>
+            <span style="font-size: 11px; color: #999;">1 CAD = USD</span>
         </div>
 
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 5px;">CAD ➔ INR 🇮🇳</div>
-            <div id="rate-inr" style="font-size: 22px; font-weight: 700; color: #d84315;">---</div>
+        <div class="currency-item">
+            <span class="pair-label">India (INR)</span>
+            <div style="display: flex; align-items: baseline;">
+                <span id="val-inr" class="exchange-rate">---</span>
+                <span class="trend-indicator">🇮🇳</span>
+            </div>
+            <span style="font-size: 11px; color: #999;">1 CAD = INR</span>
         </div>
 
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #666; letter-spacing: 1px; margin-bottom: 5px;">CAD ➔ GBP 🇬🇧</div>
-            <div id="rate-gbp" style="font-size: 22px; font-weight: 700; color: #1565c0;">---</div>
+        <div class="currency-item">
+            <span class="pair-label">UK (GBP)</span>
+            <div style="display: flex; align-items: baseline;">
+                <span id="val-gbp" class="exchange-rate">---</span>
+                <span class="trend-indicator">🇬🇧</span>
+            </div>
+            <span style="font-size: 11px; color: #999;">1 CAD = GBP</span>
         </div>
 
-    </div>
-    <div style="margin-top: 15px; font-size: 11px; color: #aaa; text-align: right;">
-        Live Data via Frankfurter API • Base: Canadian Dollar
     </div>
 </div>
 
 <script>
-    async function initCanadianDashboard() {
-        const statusLabel = document.getElementById('fx-status');
+    async function loadMarketData() {
+        const statusEl = document.getElementById('market-status');
         
         try {
-            // 1. API CALL (Modified for CAD Base)
-            // asking: "If I have 1 CAD, how much is it in USD, INR, GBP?"
+            statusEl.innerText = "Fetching market data...";
+            
+            // Calling the API
             const response = await fetch('https://api.frankfurter.app/latest?amount=1&from=CAD&to=USD,INR,GBP');
             
-            if (!response.ok) throw new Error("API Unavailable");
+            if (!response.ok) throw new Error("API Error");
 
             const data = await response.json();
             
-            // 2. PARSING & FORMATTING
-            // USD usually needs 3 decimals for precision in FX, but 2 is standard for display
-            // INR usually looks better with 2 decimals
-            const usdVal = data.rates.USD.toFixed(3); 
-            const inrVal = data.rates.INR.toFixed(2);
-            const gbpVal = data.rates.GBP.toFixed(3);
+            // Updating DOM with animation effect
+            updateRate('val-usd', '$' + data.rates.USD.toFixed(3));
+            updateRate('val-inr', '₹' + data.rates.INR.toFixed(2));
+            updateRate('val-gbp', '£' + data.rates.GBP.toFixed(3));
 
-            // 3. UI UPDATE
-            document.getElementById('rate-usd').innerText = "$" + usdVal;
-            document.getElementById('rate-inr').innerText = "₹" + inrVal;
-            document.getElementById('rate-gbp').innerText = "£" + gbpVal;
-            
-            statusLabel.innerHTML = "🟢 Market Open";
-            statusLabel.style.color = "green";
-            
+            const date = new Date(data.date).toLocaleDateString("en-CA", { year: 'numeric', month: 'short', day: 'numeric' });
+            statusEl.innerText = `Last Update: ${date}`;
+
         } catch (error) {
             console.error(error);
-            statusLabel.innerHTML = "🔴 Data Offline";
-            statusLabel.style.color = "red";
+            statusEl.innerText = "⚠️ Data Unavailable";
+            statusEl.style.color = "red";
         }
     }
 
-    initCanadianDashboard();
+    function updateRate(elementId, value) {
+        const el = document.getElementById(elementId);
+        el.style.opacity = 0; // Fade out
+        setTimeout(() => {
+            el.innerText = value;
+            el.style.opacity = 1; // Fade in
+        }, 200);
+    }
+
+    // Load data when page is ready
+    loadMarketData();
 </script>
 </body>
 </html>
