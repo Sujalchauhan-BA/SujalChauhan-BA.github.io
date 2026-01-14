@@ -1,71 +1,63 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- Mobile Navigation ---
+    // 1. Mobile Menu Toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
-    const navItems = document.querySelectorAll('.nav-links li a');
 
-    hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        hamburger.classList.toggle('fa-times');
-        hamburger.classList.toggle('fa-bars');
-    });
-
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            hamburger.classList.add('fa-bars');
-            hamburger.classList.remove('fa-times');
-        });
-    });
-
-    // --- Dynamic Year ---
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // --- Scroll Animations ---
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target);
+    if(hamburger) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active'); // Requires simple CSS for .active
+            if (navLinks.style.display === "flex") {
+                navLinks.style.display = "none";
+            } else {
+                navLinks.style.display = "flex";
+                navLinks.style.flexDirection = "column";
+                navLinks.style.position = "absolute";
+                navLinks.style.top = "70px";
+                navLinks.style.left = "0";
+                navLinks.style.width = "100%";
+                navLinks.style.background = "#fff";
+                navLinks.style.padding = "20px";
+                navLinks.style.boxShadow = "0 5px 10px rgba(0,0,0,0.1)";
             }
         });
-    }, observerOptions);
+    }
 
-    // Apply animation classes logic via JS to keep HTML clean
-    const animatedElements = document.querySelectorAll('.skill-box, .timeline-card, .project-card, .contact-wrapper');
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.6s ease-out';
-        observer.observe(el);
-    });
+    // 2. Dynamic Year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    // --- Form Handling (Mock) ---
-    const form = document.getElementById('contactForm');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const btn = form.querySelector('.submit-btn');
-        const originalText = btn.innerHTML;
-        
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-            btn.style.background = '#2ecc71'; // Success Green
-            form.reset();
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = ''; // Reset
-            }, 3000);
-        }, 1500);
-    });
+    // 3. GitHub API: Get Public Repo Count
+    const githubUsername = 'sujalchauhan-ba'; 
+    const repoCountElement = document.getElementById('repo-count');
+
+    if(repoCountElement) {
+        fetch(`https://api.github.com/users/${githubUsername}`)
+        .then(response => {
+            if (!response.ok) throw new Error("GitHub API failed");
+            return response.json();
+        })
+        .then(data => {
+            repoCountElement.textContent = data.public_repos;
+        })
+        .catch(error => {
+            console.log('GitHub API Error:', error);
+            repoCountElement.textContent = "5+"; // Fallback
+        });
+    }
+
+    // 4. Random Quote Generator
+    const quotes = [
+        "Innovation distinguishes between a leader and a follower.",
+        "Data is the new oil. It’s valuable, but if unrefined it cannot really be used.",
+        "Efficiency is doing things right; effectiveness is doing the right things.",
+        "The best way to predict the future is to create it.",
+        "Technology is best when it brings people together.",
+        "Automation applied to an efficient operation will magnify the efficiency."
+    ];
+
+    const quoteElement = document.getElementById('dynamic-quote');
+    if(quoteElement) {
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        quoteElement.textContent = `"${randomQuote}"`;
+    }
 });
