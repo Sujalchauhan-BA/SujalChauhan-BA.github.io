@@ -1,103 +1,153 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, Calendar, ExternalLink, Download } from 'lucide-react';
+import { profile, experience, skills, projects } from './data';
 import './App.css';
-
-const quotes = [
-  "Innovation distinguishes between a leader and a follower.",
-  "Data is the new oil. It’s valuable, but if unrefined it cannot really be used.",
-  "Efficiency is doing things right; effectiveness is doing the right things.",
-  "The best way to predict the future is to create it.",
-  "Technology is best when it brings people together.",
-  "Automation applied to an efficient operation will magnify the efficiency."
-];
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [repoCount, setRepoCount] = useState(null);
-  const [quote] = useState(() => quotes[Math.floor(Math.random() * quotes.length)]);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    // Fetch GitHub Repo Count
-    fetch('https://api.github.com/users/sujalchauhan-ba')
-      .then(response => {
-        if (!response.ok) throw new Error("GitHub API failed");
-        return response.json();
-      })
-      .then(data => {
-        setRepoCount(data.public_repos);
-      })
-      .catch(error => {
-        console.log('GitHub API Error:', error);
-        setRepoCount("5+");
-      });
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <div className="portfolio-container">
-      <nav className="navbar">
-        <div className="logo">Sujal Chauhan</div>
+    <div className="app-container">
+      {/* Navigation */}
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <div className="nav-content">
+          <div className="logo">{profile.name}</div>
 
-        <button
-          className="hamburger"
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          <div className="desktop-nav">
+            <a href="#about">About</a>
+            <a href="#experience">Experience</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+          </div>
 
-        <ul
-          className={`nav-links ${isMenuOpen ? 'active' : ''}`}
-          style={isMenuOpen ? {
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'absolute',
-            top: '70px',
-            left: '0',
-            width: '100%',
-            background: '#fff',
-            padding: '20px',
-            boxShadow: '0 5px 10px rgba(0,0,0,0.1)',
-            zIndex: 1000
-          } : {}}
-        >
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+          <button className="mobile-menu-btn" onClick={toggleMenu} aria-label="Toggle menu">
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
+          <a href="#about" onClick={toggleMenu}>About</a>
+          <a href="#experience" onClick={toggleMenu}>Experience</a>
+          <a href="#skills" onClick={toggleMenu}>Skills</a>
+          <a href="#projects" onClick={toggleMenu}>Projects</a>
+          <a href="#contact" onClick={toggleMenu}>Contact</a>
+        </div>
       </nav>
 
-      <main className="main-content">
-        <section id="home" className="hero-section">
-          <h1>Personal Portfolio</h1>
-          <div className="profile-image-container">
-            <img src="/Sujal-Profile.jpg" alt="Sujal Chauhan" className="profile-img" />
-          </div>
-          <div className="quote-container">
-            <p id="dynamic-quote">"{quote}"</p>
-          </div>
-          <div className="resume-link">
-             <a href="/Resume_Sujal_Chauhan.pdf" target="_blank" rel="noopener noreferrer" className="btn-primary">
-               Download Resume
-             </a>
-          </div>
-        </section>
+      {/* Hero Section */}
+      <section id="about" className="hero-section">
+        <div className="hero-content">
+          <h2 className="hero-greeting">Hello, I'm</h2>
+          <h1 className="hero-name">{profile.name}</h1>
+          <h3 className="hero-title">{profile.title}</h3>
+          <p className="hero-summary">{profile.summary}</p>
 
-        <section id="stats" className="stats-section">
-          <h2>GitHub Stats</h2>
-          <div className="stat-card">
-            <h3>Public Repositories</h3>
-            <p id="repo-count" className="stat-number">{repoCount ?? 'Loading...'}</p>
+          <div className="hero-actions">
+            <a href="#projects" className="btn btn-primary">
+              View Projects
+            </a>
+            <a href="/Resume_Sujal_Chauhan.pdf" target="_blank" className="btn btn-outline">
+              <Download size={18} />
+              Download Resume
+            </a>
           </div>
-        </section>
-      </main>
 
-      <footer className="footer">
-        <p>&copy; <span id="year">{new Date().getFullYear()}</span> Sujal Chauhan. All rights reserved.</p>
+          <div className="hero-socials">
+            <a href={profile.social.github} target="_blank" rel="noopener noreferrer"><Github /></a>
+            <a href={profile.social.linkedin} target="_blank" rel="noopener noreferrer"><Linkedin /></a>
+            <a href={`mailto:${profile.social.email}`}><Mail /></a>
+          </div>
+        </div>
+      </section>
+
+      {/* Experience Section */}
+      <section id="experience" className="section-container">
+        <h2 className="section-title">Experience</h2>
+        <div className="timeline">
+          {experience.map((job) => (
+            <div key={job.id} className="timeline-item">
+              <div className="timeline-dot"></div>
+              <div className="timeline-content">
+                <div className="timeline-header">
+                  <h3>{job.role}</h3>
+                  <span className="company">{job.company}</span>
+                </div>
+                <div className="timeline-date">
+                  <Calendar size={14} />
+                  <span>{job.date}</span>
+                </div>
+                <p>{job.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Skills Section */}
+      <section id="skills" className="section-container bg-darker">
+        <h2 className="section-title">Skills</h2>
+        <div className="skills-grid">
+          {Object.entries(skills).map(([category, items]) => (
+            <div key={category} className="skill-card">
+              <h3>{category}</h3>
+              <div className="skill-tags">
+                {items.map((skill) => (
+                  <span key={skill} className="skill-pill">{skill}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section id="projects" className="section-container">
+        <h2 className="section-title">Featured Projects</h2>
+        <div className="projects-grid">
+          {projects.map((project) => (
+            <div key={project.id} className="project-card">
+              <div className="project-content">
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <div className="project-tech">
+                  {project.tech.map((t) => (
+                    <span key={t} className="tech-tag">{t}</span>
+                  ))}
+                </div>
+                <a href={project.link} className="project-link">
+                  View Project <ExternalLink size={16} />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer id="contact" className="footer">
+        <div className="footer-content">
+          <h3>Let's Connect</h3>
+          <p>Open for new opportunities and collaborations.</p>
+          <div className="footer-socials">
+             <a href={profile.social.github} target="_blank" rel="noopener noreferrer"><Github size={20} /></a>
+             <a href={profile.social.linkedin} target="_blank" rel="noopener noreferrer"><Linkedin size={20} /></a>
+             <a href={`mailto:${profile.social.email}`}><Mail size={20} /></a>
+          </div>
+          <p className="copyright">© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   );
