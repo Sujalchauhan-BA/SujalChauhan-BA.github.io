@@ -1,336 +1,746 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sujal Chauhan | Senior Business Analyst</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+    Linkedin, Mail, MapPin, Globe, Download, 
+    Briefcase, Award, BookOpen, User, Code,
+    Send, Bot, X, Sparkles, CheckCircle, AlertCircle,
+    ChevronDown, ChevronUp, Layers, Terminal
+} from 'lucide-react';
 
-    <nav id="navbar">
-        <div class="container nav-container">
-            <a href="#" class="logo">Sujal Chauhan<span class="dot">.</span></a>
-            <ul class="nav-links">
-                <li><a href="#about">Profile</a></li>
-                <li><a href="#skills">Competencies</a></li>
-                <li><a href="#experience">Timeline</a></li>
-                <li><a href="#projects">Key Projects</a></li>
-                <li><a href="#contact" class="btn-nav">Contact</a></li>
-            </ul>
-            <div class="hamburger">
-                <i class="fas fa-bars"></i>
+const App = () => {
+    // --- DATA ---
+
+    const profile = {
+        name: "Sujal Chauhan",
+        title: "Senior Business Analyst | Project Manager (PMP®) | Scrum Master (CSM®)",
+        location: "Ontario, Canada", // Generic as requested to remove Kitchener
+        email: "sujal.chauhan@live.in",
+        linkedin: "https://www.linkedin.com/in/sujalchauhan",
+        website: "https://sujalchauhan-ba.github.io/",
+        // Refined Professional Summary
+        summary: "With over 15 years of experience spanning Telecommunications, FinTech, and IT Asset Disposition, I specialize in bridging the gap between high-level strategic vision and granular technical execution. My expertise lies in navigating ambiguity—transforming complex, often undefined business requirements into scalable, high-availability cloud solutions. As a PMP® and CSM® certified leader, I have successfully directed cross-functional teams through large-scale Digital Transformations, ensuring alignment between C-suite objectives and development realities.",
+        profileImage: "https://sujalchauhan-ba.github.io/images/profile.jpg"
+    };
+
+    // Expanded Competencies
+    const competencies = [
+        { category: "Strategic Leadership", skills: ["Change Management", "Stakeholder Governance", "Vendor Negotiation", "Risk Mitigation", "Agile Transformation", "C-Suite Reporting"] },
+        { category: "Technical Execution", skills: ["Azure Cloud Migration", "API Integration Strategy", "SQL & Data Modeling", "BPMN Process Engineering", "System Architecture Analysis"] },
+        { category: "Methodologies", skills: ["SDLC (Waterfall & Agile)", "Scrum & Kanban", "UAT Coordination", "Requirements Elicitation (JAD/RAD)", "Gap Analysis (As-Is/To-Be)"] },
+        { category: "Tools & Platforms", skills: ["JIRA & Confluence", "Microsoft Dynamics 365", "Power BI & Tableau", "Azure Logic Apps", "Salesforce CRM", "Visio & LucidChart"] }
+    ];
+
+    const languages = [
+        { name: "English", level: "Full Professional" },
+        { name: "Gujarati", level: "Native/Bilingual" },
+        { name: "Hindi", level: "Full Professional" }
+    ];
+
+    const certifications = [
+        "Project Management Professional (PMP®)",
+        "Certified ScrumMaster® (CSM®)",
+        "Microsoft Certified: Azure Fundamentals",
+        "Salesforce for Customer Service",
+        "Fundamentals of Waterfall Project Management",
+        "Practical Application of Gen AI for Project Managers"
+    ];
+
+    const education = [
+        { degree: "Bachelor of Business Management (BBM)", school: "Mangalam School of Management and Technology", year: "2013-2016" },
+        { degree: "Diploma in International Marketing", school: "Ahmedabad Management Association", year: "2013" }
+    ];
+
+    const projects = [
+        {
+            title: "Cloud Migration & Gap Analysis",
+            role: "Lead BA / BigLop",
+            desc: "Spearheaded technical requirements gathering for the migration of 12 mission-critical banking applications to Microsoft Azure. Mapped dependencies and defined 'As-Is' vs. 'To-Be' architectures to ensure high availability.",
+            tags: ["Azure", "Gap Analysis", "Banking"]
+        },
+        {
+            title: "KYC Automation Workflow",
+            role: "Process Engineer / BigLop",
+            desc: "Architected business logic for automated KYC workflows using Azure Logic Apps. Translated manual compliance procedures into detailed BPMN maps, reducing verification cycle times drastically.",
+            tags: ["Automation", "BPMN", "Compliance"]
+        },
+        {
+            title: "E-Commerce Digital Transformation",
+            role: "Sr. BA / Quantum Lifecycle",
+            desc: "Led requirements gathering and functional design for a high-volume e-commerce resale platform. Bridged business goals with technical execution to drive secondary revenue growth.",
+            tags: ["E-Commerce", "Digital Transformation", "UX"]
+        },
+        {
+            title: "ERP & CRM Integration",
+            role: "Technical Lead / Quantum Lifecycle",
+            desc: "Led gap analysis and technical specs for Microsoft Dynamics 365 integration. Facilitated JAD sessions to align system capabilities with complex operational workflows.",
+            tags: ["Dynamics 365", "ERP", "Integration"]
+        }
+    ];
+
+    // UPDATED EXPERIENCE: All roles + Detailed recent 3
+    const experience = [
+        {
+            company: "BigLop",
+            role: "Senior Business Analyst",
+            location: "Mississauga, ON",
+            period: "March 2025 - Present",
+            bullets: [
+                "Spearheaded the Cloud Migration strategy for 12 mission-critical banking applications to Azure, leading a technical squad of 15+ developers and architects to ensure 99.9% uptime compliance.",
+                "Process Engineering: Architected automated KYC workflows using Azure Logic Apps; translated manual compliance procedures into detailed BPMN 2.0 process maps, reducing customer verification cycle times by 45%.",
+                "Challenge: Encountered significant ambiguity in legacy code dependencies. Fix: Conducted comprehensive dependency mapping and 'As-Is' vs. 'To-Be' gap analysis to prevent production data loss.",
+                "ERP Implementation: Facilitated high-stakes JAD sessions with Finance and Operations stakeholders to define scope for a modern ERP system replacing legacy banking platforms.",
+                "Data Strategy: Designed and deployed interactive Power BI dashboards by synthesizing complex data requirements from C-suite executives, reducing manual monthly reporting efforts by 40 hours.",
+                "Security Governance: Defined rigorous Non-Functional Requirements (NFRs) for the Azure environment, incorporating layered access controls and encryption standards tailored for banking regulations.",
+                "Change Management: Developed user adoption strategies and training workshops to bridge the gap between technical changes and operational workflows, achieving a 90%+ adoption rate."
+            ]
+        },
+        {
+            company: "Quantum Lifecycle Partners LP",
+            role: "Senior Business Analyst & Process Lead",
+            location: "Brampton, ON",
+            period: "April 2021 - Feb 2025",
+            bullets: [
+                "Digital Transformation: Led the functional design for a high-volume e-commerce resale platform, collaborating with a cross-functional team of 10 to drive a 25% increase in secondary revenue.",
+                "Challenge: Aligning diverse stakeholder needs (Logistics vs. Sales). Fix: Managed ambiguity by translating vague business goals into actionable technical User Stories and Acceptance Criteria.",
+                "Integration Strategy: Led the technical specification definition for Microsoft Dynamics 365 integration, ensuring seamless data flow between CRM and ERP systems.",
+                "Analytics Implementation: Designed data models and deployed Power BI dashboards to track Customer Lifecycle KPIs, replacing manual aggregation and improving forecast accuracy by 30%.",
+                "Process Optimization: Defined end-to-end IT Asset Disposition (ITAD) workflows covering asset tracking and data security, standardizing operations across enterprise and SMB client segments.",
+                "Agile Governance: Established Agile requirements governance and backlog management practices, facilitating sprint planning/refinement which reduced go-live timelines by 15-20%.",
+                "Managed the full SDLC for multiple internal initiatives, ensuring rigorous UAT coordination and defect resolution prior to production deployment."
+            ]
+        },
+        {
+            company: "Teleperformance",
+            role: "Technical Support Supervisor",
+            location: "Toronto, ON",
+            period: "Nov 2019 - April 2021",
+            bullets: [
+                "Operational Leadership: Managed a high-performing team of 12-15 support agents, acting as the final escalation point for complex technical issues within the Apple ecosystem (iOS/MacOS).",
+                "Challenge: High First Contact Resolution (FCR) variance. Fix: Created and standardized internal Knowledge Base (KB) articles and SOPs, leading to a 15% sustained increase in FCR.",
+                "Performance Management: Conducted regular performance evaluations, training workshops, and live call audits to maintain service standards and improve agent efficiency.",
+                "Crisis Management: Acted as point-of-contact during high-priority outages, consistently maintaining CSAT scores above 85% on supervisor-handled interactions.",
+                "Cross-Functional Collaboration: Liaised with logistics, billing, and engineering support teams to ensure swift issue resolution and seamless customer experience.",
+                "Data-Driven Coaching: utilized call analytics to identify training gaps, reducing average resolution time by 20% through targeted real-time coaching.",
+                "Achieved 90%+ independent resolution of escalated cases, minimizing the need for external engineering intervention."
+            ]
+        },
+        {
+            company: "Progressive Telecom LLC",
+            role: "Senior Business Analyst (Strategic Projects)",
+            location: "India",
+            period: "Jan 2014 - Sep 2018",
+            bullets: [
+                "Conducted comprehensive Cost-Benefit Analysis (CBA) for international market expansions, influencing multi-million dollar investment decisions.",
+                "Defined technical and commercial requirements for end-to-end telecom interconnection projects, bridging Network Engineering and Finance teams.",
+                "Led Business Process Management (BPM) initiatives to optimize deployment workflows, significantly reducing deployment cycle times.",
+                "Analyzed complex international telecom regulations to define compliance frameworks and mitigate operational risks.",
+                "Spearheaded negotiation of bilateral interconnection agreements and defined strict Service Level Agreements (SLAs).",
+                "Facilitated alignment workshops between Operations, Finance, and Technical teams using JIRA/Confluence for tracking."
+            ]
+        },
+        {
+            company: "Axistel FZE",
+            role: "Carrier Relations Manager",
+            location: "UAE",
+            period: "Aug 2012 - Nov 2013",
+            bullets: [
+                "Led and managed international carrier interconnection projects, ensuring seamless integration, compliance, and service delivery.",
+                "Negotiated and finalized interconnection agreements with global carriers, securing cost-effective rates and increasing revenue margins.",
+                "Oversaw business development strategies, expanding partnerships with domestic and international telecom providers.",
+                "Managed end-to-end project workflows, aligning Agile methodologies with business objectives to enhance operational efficiency.",
+                "Collaborated with cross-functional teams (finance, technical operations, regulatory) to ensure seamless service execution."
+            ]
+        },
+        {
+            company: "Spactron Limited",
+            role: "Account Manager",
+            location: "India",
+            period: "Nov 2011 - Aug 2012",
+            bullets: [
+                "Managed account onboarding and interconnection setup, ensuring seamless integration and service delivery for new partners.",
+                "Negotiated and optimized traffic flow, prioritizing high-quality CLI routes to enhance service reliability.",
+                "Conducted market analysis and route optimization strategies, improving cost efficiency and performance.",
+                "Coordinated internal processes for quality assurance, reducing service disruptions and improving operational efficiency."
+            ]
+        },
+        {
+            company: "Progressive Telecom LLC",
+            role: "Director of Business Development",
+            location: "India",
+            period: "June 2010 - Oct 2011",
+            bullets: [
+                "Developed and executed strategic business expansion initiatives, identifying and onboarding new telecom partners.",
+                "Negotiated and finalized multimillion-dollar bilateral agreements with international carriers, improving company margins.",
+                "Led resolution of interconnection challenges, working closely with internal and external stakeholders to optimize network traffic.",
+                "Represented the company at global industry events to drive lead generation and strengthen key decision-maker relationships."
+            ]
+        },
+        {
+            company: "Bridgevoice Inc",
+            role: "Carrier Relations Manager",
+            location: "India",
+            period: "June 2009 - March 2010",
+            bullets: [
+                "Developed and maintained strategic relationships with international telecom carriers, ensuring smooth interconnection.",
+                "Led market research and business case evaluations identifying new partnership opportunities.",
+                "Monitored and managed traffic flow to ensure optimal performance and revenue growth while maintaining service quality.",
+                "Oversaw revenue tracking and reporting to ensure accurate financial performance assessments."
+            ]
+        }
+    ];
+
+    // --- GEMINI API HELPER ---
+
+    const callGemini = async (prompt, systemContext, history = []) => {
+        const apiKey = ""; // Injected by environment
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        const contents = history.map(msg => ({
+            role: msg.sender === 'user' ? 'user' : 'model',
+            parts: [{ text: msg.text }]
+        }));
+        
+        contents.push({
+            role: "user",
+            parts: [{ text: prompt }]
+        });
+
+        const payload = {
+            contents: contents,
+            systemInstruction: {
+                parts: [{ text: systemContext }]
+            }
+        };
+
+        const makeRequest = async (retryCount = 0) => {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    if (response.status === 429 && retryCount < 3) {
+                        const delay = Math.pow(2, retryCount) * 1000;
+                        await new Promise(res => setTimeout(res, delay));
+                        return makeRequest(retryCount + 1);
+                    }
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm having trouble thinking right now.";
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                return "I apologize, but I'm having trouble connecting to my brain right now. Please try again later.";
+            }
+        };
+
+        return makeRequest();
+    };
+
+    // --- CONTEXT PREPARATION ---
+    const fullProfileContext = JSON.stringify({
+        profile,
+        competencies,
+        projects,
+        experience,
+        certifications,
+        education
+    });
+
+    const chatSystemPrompt = `You are an intelligent portfolio assistant for Sujal Chauhan. 
+    Here is his complete professional profile data: ${fullProfileContext}.
+    
+    Your goal is to answer visitor questions about Sujal's experience, skills, and projects professionally and concisely.
+    - If asked about contact info, provide his email and LinkedIn.
+    - If asked about specific skills (e.g., "Does he know Azure?"), reference his projects and competencies.
+    - Be friendly, professional, and act as an advocate for Sujal.
+    - Keep answers under 3 sentences unless asked for detail.`;
+
+    const jobMatchSystemPrompt = `You are a Recruiter Assistant for Sujal Chauhan. 
+    Here is his profile: ${fullProfileContext}.
+    
+    The user will provide a JOB DESCRIPTION. Your task is to:
+    1. Analyze how well Sujal fits this role based on his profile.
+    2. Write a short, persuasive paragraph (max 100 words) explaining the fit.
+    3. List the top 3-4 matching skills or experiences from his profile that align with this job.
+    4. If he is not a good fit, be honest but constructive, highlighting transferable skills.
+    
+    Format the output as simple HTML (using <strong>, <br>, <ul>, <li> tags) so it can be rendered safely.`;
+
+
+    // --- SUB-COMPONENTS ---
+
+    const NavItem = ({ label, target }) => (
+        <a href={target} className="text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors duration-200">
+            {label}
+        </a>
+    );
+
+    const SectionHeader = ({ title, subtitle }) => (
+        <div className="mb-10">
+            <h2 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">{title}</h2>
+            <div className="h-1 w-20 bg-blue-600 rounded"></div>
+            {subtitle && <p className="mt-4 text-gray-600 max-w-2xl">{subtitle}</p>}
+        </div>
+    );
+
+    const SkillCard = ({ category, skills }) => (
+        <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{category}</h3>
+            <div className="flex flex-wrap gap-2">
+                {skills.map((skill, idx) => (
+                    <span key={idx} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-700">
+                        {skill}
+                    </span>
+                ))}
             </div>
         </div>
-    </nav>
+    );
 
-    <section id="hero" class="hero-section">
-        <div class="container hero-grid">
-            <div class="hero-text fade-in-left">
-                <span class="eyebrow">Senior Business Analyst | PMP® & CSM®</span>
-                <h1>Bridging Business Goals with <span class="highlight">Technical Execution.</span></h1>
-                <p class="hero-desc">
-                    Over 15 years of experience driving digital transformation. Expert in requirements elicitation, Azure Cloud migration, and data-driven process optimization.
+    const ProjectCard = ({ project }) => (
+        <div className="group relative bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div className="p-8">
+                <div className="flex justify-between items-start mb-4">
+                    <div>
+                        <p className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-1">{project.role}</p>
+                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{project.title}</h3>
+                    </div>
+                    <div className="p-2 bg-blue-50 text-blue-600 rounded-full">
+                        <Briefcase size={20} />
+                    </div>
+                </div>
+                <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                    {project.desc}
                 </p>
+                <div className="flex flex-wrap gap-2 mt-auto">
+                    {project.tags.map((tag, i) => (
+                        <span key={i} className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                            #{tag}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    const ExperienceItem = ({ exp, isLast }) => {
+        const [isExpanded, setIsExpanded] = useState(false);
+        const shouldCollapse = exp.bullets.length > 4;
+
+        return (
+            <div className="relative pl-8 md:pl-0">
+                {/* Timeline Line (Desktop) */}
+                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2"></div>
                 
-                <div class="quote-container">
-                    <i class="fas fa-quote-left quote-icon"></i>
-                    <p id="dynamic-quote">Loading daily insight...</p>
-                </div>
+                <div className={`md:flex justify-between items-start w-full mb-12 ${isLast ? '' : ''}`}>
+                    {/* Left Side (Date/Location) */}
+                    <div className="md:w-[45%] md:text-right md:pr-12 mb-2 md:mb-0">
+                        <h4 className="text-lg font-bold text-gray-900">{exp.company}</h4>
+                        <p className="text-sm font-medium text-blue-600 mb-1">{exp.period}</p>
+                        <p className="text-xs text-gray-500">{exp.location}</p>
+                    </div>
 
-                <div class="hero-cta">
-                    <a href="#projects" class="btn btn-primary">View Case Studies</a>
-                    <a href="Resume_Sujal_Chauhan.pdf" download class="btn btn-secondary"><i class="fas fa-download"></i> Download CV</a>
-                </div>
-                
-                <div class="hero-stats">
-                    <div class="stat">
-                        <strong>15+</strong>
-                        <span>Years Exp.</span>
-                    </div>
-                    <div class="stat">
-                        <strong>$50M+</strong>
-                        <span>Portfolio Value</span>
-                    </div>
-                    <div class="stat">
-                        <strong>45%</strong>
-                        <span>Avg Efficiency Gain</span>
+                    {/* Timeline Dot */}
+                    <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-sm -translate-x-1.5 md:-translate-x-1/2 mt-1.5 z-10"></div>
+
+                    {/* Right Side (Role/Bullets) */}
+                    <div className="md:w-[45%] md:pl-12">
+                        <h5 className="text-md font-bold text-gray-800 mb-3">{exp.role}</h5>
+                        <ul className="space-y-3">
+                            {(isExpanded ? exp.bullets : exp.bullets.slice(0, 4)).map((bullet, i) => (
+                                <li key={i} className="text-sm text-gray-600 leading-relaxed flex items-start">
+                                    <span className="mr-2 mt-1.5 w-1 h-1 bg-gray-400 rounded-full flex-shrink-0"></span>
+                                    {bullet}
+                                </li>
+                            ))}
+                        </ul>
+                        {shouldCollapse && (
+                            <button 
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className="mt-2 text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
+                            >
+                                {isExpanded ? (
+                                    <>Show Less <ChevronUp size={14} /></>
+                                ) : (
+                                    <>Show More ({exp.bullets.length - 4} items) <ChevronDown size={14} /></>
+                                )}
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
-            <div class="hero-visual fade-in-right">
-                <div class="image-wrapper">
-                    <img src="Sujal-Profile.jpg" alt="Sujal Chauhan" class="profile-img">
-                    <div class="floating-card card-1">
-                        <i class="fas fa-chart-line"></i>
-                        <span>ROI Focused</span>
-                    </div>
-                    <div class="floating-card card-2">
-                        <i class="fas fa-network-wired"></i>
-                        <span>System Arch.</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        );
+    };
 
-    <section id="skills" class="section-padding bg-light">
-        <div class="container">
-            <div class="section-header center">
-                <h2>Core Competencies</h2>
-                <div class="line"></div>
-            </div>
-            <div class="skills-grid">
-                <div class="skill-box">
-                    <div class="skill-header">
-                        <i class="fas fa-search-dollar"></i>
-                        <h3>Strategic Analysis</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span>Requirement Elicitation</span>
-                        <span>Gap Analysis</span>
-                        <span>Business Case Dev</span>
-                        <span>Cost-Benefit Analysis</span>
-                        <span>ROI Strategy</span>
-                    </div>
-                </div>
+    // --- JOB MATCHER MODAL ---
+    const JobMatchModal = ({ isOpen, onClose }) => {
+        const [jobDesc, setJobDesc] = useState("");
+        const [analysis, setAnalysis] = useState(null);
+        const [loading, setLoading] = useState(false);
 
-                <div class="skill-box">
-                    <div class="skill-header">
-                        <i class="fas fa-cogs"></i>
-                        <h3>Process Engineering</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span>BPMN 2.0 (Visio/Lucid)</span>
-                        <span>Workflow Automation</span>
-                        <span>AS-IS / TO-BE</span>
-                        <span>Value Stream Mapping</span>
-                        <span>Logic Apps</span>
-                    </div>
-                </div>
+        if (!isOpen) return null;
 
-                <div class="skill-box">
-                    <div class="skill-header">
-                        <i class="fas fa-database"></i>
-                        <h3>Data & Cloud</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span>Azure (AZ-900)</span>
-                        <span>SQL Querying</span>
-                        <span>Power BI</span>
-                        <span>API Integration (REST)</span>
-                        <span>Data Modeling</span>
-                    </div>
-                </div>
-
-                <div class="skill-box">
-                    <div class="skill-header">
-                        <i class="fas fa-users-cog"></i>
-                        <h3>Agile Leadership</h3>
-                    </div>
-                    <div class="skill-tags">
-                        <span>Scrum (CSM®)</span>
-                        <span>JIRA / Confluence</span>
-                        <span>User Stories</span>
-                        <span>UAT Management</span>
-                        <span>Stakeholder Mgmt</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="experience" class="section-padding">
-        <div class="container">
-            <div class="section-header">
-                <h2>Professional Timeline</h2>
-                <div class="line align-left"></div>
-            </div>
+        const handleAnalyze = async () => {
+            if (!jobDesc.trim()) return;
+            setLoading(true);
+            setAnalysis(null);
             
-            <div class="timeline">
-                <div class="timeline-card fade-up">
-                    <div class="job-meta">
-                        <span class="job-date">March 2025 - Present</span>
-                        <h3 class="job-role">Senior Business Analyst</h3>
-                        <h4 class="job-company">BigLop | Mississauga, ON</h4>
-                    </div>
-                    <div class="job-details">
-                        <p>Leading requirements engineering for banking ERP replacement and Azure migration initiatives.</p>
-                        <ul>
-                            <li><strong>Azure Migration:</strong> Partnered with architects to map dependencies for migrating 12 business-critical apps to Microsoft Azure.</li>
-                            <li><strong>Process Automation:</strong> Designed Azure Logic Apps flows for KYC verification, reducing verification cycle time by <strong>45%</strong>.</li>
-                            <li><strong>Data Intelligence:</strong> Defined KPIs for Power BI dashboards, reducing manual compliance reporting by <strong>40 hours/month</strong>.</li>
-                        </ul>
-                    </div>
-                </div>
+            const result = await callGemini(jobDesc, jobMatchSystemPrompt);
+            setAnalysis(result);
+            setLoading(false);
+        };
 
-                <div class="timeline-card fade-up">
-                    <div class="job-meta">
-                        <span class="job-date">April 2021 - Feb 2025</span>
-                        <h3 class="job-role">Business Analyst</h3>
-                        <h4 class="job-company">Quantum Lifecycle Partners LP</h4>
-                    </div>
-                    <div class="job-details">
-                        <p>Focused on Product Definition, CRM Integration, and Operational Intelligence.</p>
-                        <ul>
-                            <li><strong>E-Commerce Launch:</strong> Gathered requirements and created wireframes for a B2C platform, driving a <strong>25% increase</strong> in secondary revenue.</li>
-                            <li><strong>CRM Integration:</strong> Managed gap analysis for Microsoft Dynamics 365 integration, ensuring seamless data synchronization.</li>
-                            <li><strong>Forecasting:</strong> Built Power BI dashboards for inventory tracking, improving revenue forecasting accuracy by <strong>30%</strong>.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="timeline-card fade-up">
-                    <div class="job-meta">
-                        <span class="job-date">Jan 2014 - Sept 2018</span>
-                        <h3 class="job-role">Senior Business Analyst</h3>
-                        <h4 class="job-company">Progressive Telecom LLC</h4>
-                    </div>
-                    <div class="job-details">
-                        <p>Specialized in Business Case Development and Telecom Interconnection Workflows.</p>
-                        <ul>
-                            <li><strong>Business Cases:</strong> Authored feasibility studies for interconnection opportunities, providing clear ROI projections to executives.</li>
-                            <li><strong>Process Re-engineering:</strong> Mapped end-to-end workflows to remove redundancies, optimizing deployment time.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects" class="section-padding bg-dark">
-        <div class="container">
-            <div class="section-header center text-white">
-                <h2>Project Highlights</h2>
-                <div class="line bg-gold"></div>
-                <p class="sub-text">Strategic impact driven by process modeling and technical integration.</p>
-            </div>
-            
-            <div class="project-grid">
-                <article class="project-card">
-                    <div class="card-top">
-                        <span class="badge">FinTech / Azure</span>
-                        <h3>Automated KYC Verification</h3>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Challenge:</strong> Legacy platform required manual, paper-heavy KYC checks, causing slow onboarding and high regulatory risk.</p>
-                        <p><strong>Solution:</strong> Designed an event-driven serverless architecture (Logic Apps) to automate verification based on confidence scores.</p>
-                        <div class="card-stats">
-                            <div class="stat-row">
-                                <span>Cycle Time</span>
-                                <strong>-45%</strong>
-                            </div>
-                            <div class="stat-row">
-                                <span>Monthly Savings</span>
-                                <strong>40 Hrs</strong>
-                            </div>
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in duration-300">
+                    <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-blue-50/50">
+                        <div className="flex items-center gap-2 text-blue-700">
+                            <Sparkles size={20} className="fill-blue-200" />
+                            <h3 className="text-xl font-bold">Recruiter Mode: Fit Analyzer</h3>
                         </div>
-                        <div class="tech-stack">
-                            <small>Tech Stack:</small>
-                            <span>Azure Logic Apps</span>
-                            <span>SQL</span>
-                            <span>Power BI</span>
-                        </div>
+                        <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition"><X size={20} /></button>
                     </div>
-                </article>
-
-                <article class="project-card">
-                    <div class="card-top">
-                        <span class="badge">E-Commerce</span>
-                        <h3>B2C Platform Launch</h3>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Challenge:</strong> Client lacked a direct-to-consumer channel to maximize asset recovery value from secondary markets.</p>
-                        <p><strong>Solution:</strong> Led end-to-end requirements gathering and UAT for a bespoke e-commerce platform integrated with Dynamics 365.</p>
-                        <div class="card-stats">
-                            <div class="stat-row">
-                                <span>Revenue</span>
-                                <strong>+25%</strong>
-                            </div>
-                            <div class="stat-row">
-                                <span>Adoption</span>
-                                <strong>High</strong>
-                            </div>
-                        </div>
-                        <div class="tech-stack">
-                            <small>Tech Stack:</small>
-                            <span>Dynamics 365</span>
-                            <span>Figma</span>
-                            <span>REST API</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="section-padding">
-        <div class="container">
-            <div class="contact-wrapper">
-                <div class="contact-info">
-                    <h2>Let's Start a Conversation</h2>
-                    <p>I am currently open to discussing Senior Business Analyst roles where I can leverage my expertise in process automation and cloud migration.</p>
                     
-                    <div class="info-item">
-                        <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
+                    <div className="p-6 space-y-6">
+                        {!analysis && !loading && (
+                            <div className="space-y-4">
+                                <p className="text-gray-600">
+                                    Paste a job description below, and Sujal's AI agent will analyze his profile to tell you exactly why he's a great match.
+                                </p>
+                                <textarea 
+                                    className="w-full h-40 p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none text-sm"
+                                    placeholder="Paste job description here..."
+                                    value={jobDesc}
+                                    onChange={(e) => setJobDesc(e.target.value)}
+                                />
+                                <button 
+                                    onClick={handleAnalyze}
+                                    disabled={!jobDesc.trim()}
+                                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                                >
+                                    Analyze Fit ✨
+                                </button>
+                            </div>
+                        )}
+
+                        {loading && (
+                            <div className="py-12 flex flex-col items-center justify-center text-center space-y-4">
+                                <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                                <p className="text-gray-500 animate-pulse">Analyzing Sujal's profile against your role...</p>
+                            </div>
+                        )}
+
+                        {analysis && (
+                            <div className="space-y-6">
+                                <div className="bg-green-50 p-6 rounded-2xl border border-green-100">
+                                    <div className="flex items-center gap-2 mb-4 text-green-800 font-bold">
+                                        <CheckCircle size={20} />
+                                        <h4>Match Analysis</h4>
+                                    </div>
+                                    <div 
+                                        className="prose prose-sm prose-green max-w-none text-gray-700"
+                                        dangerouslySetInnerHTML={{ __html: analysis }}
+                                    />
+                                </div>
+                                <button 
+                                    onClick={() => { setAnalysis(null); setJobDesc(""); }}
+                                    className="w-full py-3 border border-gray-200 hover:bg-gray-50 text-gray-700 font-medium rounded-xl transition"
+                                >
+                                    Analyze Another Role
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    // --- AI CHAT COMPONENT ---
+    const AiChat = () => {
+        const [isOpen, setIsOpen] = useState(false);
+        const [messages, setMessages] = useState([
+            { sender: 'bot', text: "Hi! I'm Sujal's AI assistant. Ask me anything about his skills, projects, or experience." }
+        ]);
+        const [input, setInput] = useState("");
+        const [isTyping, setIsTyping] = useState(false);
+        const messagesEndRef = useRef(null);
+
+        const scrollToBottom = () => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        };
+
+        useEffect(scrollToBottom, [messages, isTyping]);
+
+        const handleSend = async (e) => {
+            e.preventDefault();
+            if (!input.trim()) return;
+
+            const userMsg = { sender: 'user', text: input };
+            setMessages(prev => [...prev, userMsg]);
+            setInput("");
+            setIsTyping(true);
+
+            const apiHistory = messages.slice(1);
+            
+            const botResponse = await callGemini(input, chatSystemPrompt, apiHistory);
+
+            setIsTyping(false);
+            setMessages(prev => [...prev, { sender: 'bot', text: botResponse }]);
+        };
+
+        return (
+            <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end font-sans">
+                {isOpen && (
+                    <div className="bg-white rounded-2xl shadow-2xl w-80 mb-4 overflow-hidden border border-gray-100 flex flex-col h-[500px] transition-all duration-300 animate-in slide-in-from-bottom-5">
+                        <div className="bg-blue-600 p-4 flex justify-between items-center text-white">
+                            <div className="flex items-center gap-2">
+                                <Bot size={18} />
+                                <span className="font-medium text-sm">Sujal's Assistant ✨</span>
+                            </div>
+                            <button onClick={() => setIsOpen(false)} className="hover:bg-blue-700 p-1 rounded">
+                                <X size={16} />
+                            </button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+                            {messages.map((m, i) => (
+                                <div key={i} className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-[85%] p-3 rounded-2xl text-xs leading-relaxed ${
+                                        m.sender === 'user' 
+                                        ? 'bg-blue-600 text-white rounded-tr-none' 
+                                        : 'bg-white text-gray-700 shadow-sm border border-gray-100 rounded-tl-none'
+                                    }`}>
+                                        {m.text}
+                                    </div>
+                                </div>
+                            ))}
+                            {isTyping && (
+                                <div className="flex justify-start">
+                                    <div className="bg-white text-gray-500 p-3 rounded-2xl rounded-tl-none border border-gray-100 text-xs flex gap-1 items-center">
+                                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
+                                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-75"></span>
+                                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-150"></span>
+                                    </div>
+                                </div>
+                            )}
+                            <div ref={messagesEndRef} />
+                        </div>
+                        <form onSubmit={handleSend} className="p-3 bg-white border-t border-gray-100 flex gap-2">
+                            <input 
+                                className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                placeholder="Type a question..."
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                            />
+                            <button type="submit" disabled={isTyping} className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition disabled:opacity-50">
+                                <Send size={14} />
+                            </button>
+                        </form>
+                    </div>
+                )}
+                <button 
+                    onClick={() => setIsOpen(!isOpen)} 
+                    className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-transform hover:scale-105 flex items-center gap-2 group"
+                >
+                    {isOpen ? <X size={24} /> : <Bot size={24} />}
+                    {!isOpen && <span className="font-medium pr-2 group-hover:block hidden md:block">Chat with AI</span>}
+                </button>
+            </div>
+        );
+    };
+
+    const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+
+    return (
+        <div className="min-h-screen bg-white font-sans text-gray-900">
+            {/* Inline Styles for Fonts/Glassmorphism */}
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+                body { font-family: 'Inter', sans-serif; }
+                .glass-panel {
+                    background: rgba(255, 255, 255, 0.85);
+                    backdrop-filter: blur(12px);
+                }
+            `}</style>
+
+            {/* Navigation */}
+            <nav className="fixed w-full top-0 z-40 glass-panel border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-16 items-center">
+                        <span className="text-xl font-bold tracking-tight text-gray-900">SC.</span>
+                        <div className="hidden md:flex space-x-8">
+                            <NavItem label="About" target="#about" />
+                            <NavItem label="Skills" target="#skills" />
+                            <NavItem label="Projects" target="#projects" />
+                            <NavItem label="Experience" target="#experience" />
+                            <NavItem label="Education" target="#education" />
+                        </div>
+                        <a href={profile.linkedin} target="_blank" rel="noreferrer" className="bg-gray-900 text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-gray-800 transition">
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Hero Section */}
+            <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div className="flex flex-col md:flex-row items-center gap-12">
+                    <div className="flex-1 text-center md:text-left">
+                        <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-xs font-bold tracking-wide mb-6">
+                            OPEN TO WORK
+                        </span>
+                        <h1 className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tight leading-tight mb-6">
+                            Analyzing Business.<br />
+                            <span className="text-blue-600">Engineering Solutions.</span>
+                        </h1>
+                        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto md:mx-0 leading-relaxed">
+                            {profile.title} based in {profile.location}.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                            <div className="flex gap-4">
+                                <a href="#experience" className="px-8 py-3 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+                                    View Experience
+                                </a>
+                                <a href="#projects" className="px-8 py-3 bg-white text-gray-700 border border-gray-200 font-medium rounded-full hover:bg-gray-50 transition">
+                                    See Projects
+                                </a>
+                            </div>
+                            
+                            {/* JOB MATCHER BUTTON */}
+                            <button 
+                                onClick={() => setIsJobModalOpen(true)}
+                                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-medium rounded-full hover:shadow-lg hover:shadow-purple-200 transition flex items-center justify-center gap-2"
+                            >
+                                <Sparkles size={18} /> Recruiter Mode
+                            </button>
+                        </div>
+                    </div>
+                    <div className="w-48 h-48 md:w-80 md:h-80 relative flex-shrink-0">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-gray-50 rounded-full blur-2xl opacity-70"></div>
+                        <img 
+                            src={profile.profileImage} 
+                            alt="Sujal Chauhan" 
+                            className="relative w-full h-full object-cover rounded-full border-4 border-white shadow-2xl"
+                            onError={(e) => {
+                                e.target.onerror = null; 
+                                e.target.src = "https://ui-avatars.com/api/?name=Sujal+Chauhan&background=0D8ABC&color=fff&size=256";
+                            }}
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* About Section */}
+            <section id="about" className="py-20 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <SectionHeader title="About Me" />
+                    <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100">
+                        <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                            {profile.summary}
+                        </p>
+                        {/* Removed Certifications/Location blocks from here as requested */}
+                        <div className="flex items-center gap-3 pt-6 border-t border-gray-100">
+                            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Globe size={20} /></div>
+                            <div>
+                                <p className="text-xs text-gray-500 font-semibold uppercase">Languages</p>
+                                <p className="text-sm font-medium">{languages.map(l => l.name).join(", ")}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Core Competencies */}
+            <section id="skills" className="py-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <SectionHeader title="Core Competencies" subtitle="A blend of strategic leadership and hands-on technical expertise." />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {competencies.map((comp, idx) => (
+                            <SkillCard key={idx} {...comp} />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Projects Section */}
+            <section id="projects" className="py-20 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <SectionHeader title="Key Projects" subtitle="Initiatives that drove digital transformation and efficiency." />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {projects.map((proj, idx) => (
+                            <ProjectCard key={idx} project={proj} />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Experience Section */}
+            <section id="experience" className="py-20">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <SectionHeader title="Professional Experience" subtitle="A timeline of delivering value across multiple industries." />
+                    <div className="mt-12">
+                        {experience.map((exp, idx) => (
+                            <ExperienceItem key={idx} exp={exp} isLast={idx === experience.length - 1} />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Education & Certs */}
+            <section id="education" className="py-20 bg-gray-900 text-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                         <div>
-                            <h4>Location</h4>
-                            <p>Kitchener, Ontario, Canada</p>
+                            <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
+                                <BookOpen className="text-blue-400" /> Education
+                            </h3>
+                            <div className="space-y-8">
+                                {education.map((edu, idx) => (
+                                    <div key={idx}>
+                                        <h4 className="text-lg font-semibold text-white">{edu.school}</h4>
+                                        <p className="text-gray-400 text-sm">{edu.degree}</p>
+                                        <p className="text-blue-400 text-xs mt-1">{edu.year}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="info-item">
-                        <div class="icon-box"><i class="fas fa-envelope"></i></div>
                         <div>
-                            <h4>Email</h4>
-                            <p><a href="mailto:sujal.chauhan@live.in">sujal.chauhan@live.in</a></p>
+                            <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
+                                <Award className="text-blue-400" /> Certifications
+                            </h3>
+                            <div className="flex flex-wrap gap-3">
+                                {certifications.map((cert, idx) => (
+                                    <span key={idx} className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:text-white hover:border-blue-500 transition-colors">
+                                        {cert}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="resume-download-box">
-                        <a href="Resume_Sujal_Chauhan.pdf" download class="btn-full-width"><i class="fas fa-file-download"></i> Download CV</a>
+            {/* Footer */}
+            <footer className="py-12 bg-white border-t border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 text-center">
+                    <div className="flex justify-center gap-6 mb-8">
+                        <a href={profile.linkedin} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-blue-600 transition"><Linkedin size={24} /></a>
+                        <a href={`mailto:${profile.email}`} className="text-gray-400 hover:text-blue-600 transition"><Mail size={24} /></a>
                     </div>
+                    <p className="text-gray-500 text-sm">© {new Date().getFullYear()} Sujal Chauhan. All rights reserved.</p>
                 </div>
+            </footer>
 
-                <div class="contact-form-container">
-                    <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
-                        <div class="form-group">
-                            <label>Full Name *</label>
-                            <input type="text" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email Address *</label>
-                            <input type="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Message *</label>
-                            <textarea name="message" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary submit-btn">Send Message</button>
-                    </form>
-                </div>
-            </div>
+            <AiChat />
+            
+            <JobMatchModal 
+                isOpen={isJobModalOpen} 
+                onClose={() => setIsJobModalOpen(false)} 
+            />
         </div>
-    </section>
+    );
+};
 
-    <footer>
-        <div class="container footer-content">
-            <div class="footer-left">
-                <h3>Sujal Chauhan<span>.</span></h3>
-                <p>Senior Business Analyst | PMP® | CSM®</p>
-                <div id="github-stats" class="github-api-box">
-                    <i class="fab fa-github"></i>
-                    <span id="repo-count">Loading...</span> Public Repos
-                </div>
-            </div>
-            <div class="footer-right">
-                <p>&copy; <span id="year"></span> Sujal Chauhan. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+export default App;
