@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
     Linkedin, Mail, MapPin, Globe, Download, 
     Briefcase, Award, BookOpen, User, Code,
-    Send, Bot, X, Sparkles, CheckCircle, AlertCircle,
-    ChevronDown, ChevronUp, Layers, Terminal
+    Send, Bot, X, Sparkles, CheckCircle, AlertCircle
 } from 'lucide-react';
 
 const App = () => {
@@ -12,7 +11,7 @@ const App = () => {
     const profile = {
         name: "Sujal Chauhan",
         title: "Senior Business Analyst | Project Manager (PMP®) | Scrum Master (CSM®)",
-        location: "Ontario, Canada", // Generic as requested to remove Kitchener
+        location: "Ontario, Canada",
         email: "sujal.chauhan@live.in",
         linkedin: "https://www.linkedin.com/in/sujalchauhan",
         website: "https://sujalchauhan-ba.github.io/",
@@ -325,54 +324,38 @@ const App = () => {
         </div>
     );
 
-    const ExperienceItem = ({ exp, isLast }) => {
-        const [isExpanded, setIsExpanded] = useState(false);
-        const shouldCollapse = exp.bullets.length > 4;
+    // RESTORED: Standard ExperienceItem without Accordion
+    const ExperienceItem = ({ exp, isLast }) => (
+        <div className="relative pl-8 md:pl-0">
+            {/* Timeline Line (Desktop) */}
+            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2"></div>
+            
+            <div className={`md:flex justify-between items-start w-full mb-12 ${isLast ? '' : ''}`}>
+                {/* Left Side (Date/Location) */}
+                <div className="md:w-[45%] md:text-right md:pr-12 mb-2 md:mb-0">
+                    <h4 className="text-lg font-bold text-gray-900">{exp.company}</h4>
+                    <p className="text-sm font-medium text-blue-600 mb-1">{exp.period}</p>
+                    <p className="text-xs text-gray-500">{exp.location}</p>
+                </div>
 
-        return (
-            <div className="relative pl-8 md:pl-0">
-                {/* Timeline Line (Desktop) */}
-                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2"></div>
-                
-                <div className={`md:flex justify-between items-start w-full mb-12 ${isLast ? '' : ''}`}>
-                    {/* Left Side (Date/Location) */}
-                    <div className="md:w-[45%] md:text-right md:pr-12 mb-2 md:mb-0">
-                        <h4 className="text-lg font-bold text-gray-900">{exp.company}</h4>
-                        <p className="text-sm font-medium text-blue-600 mb-1">{exp.period}</p>
-                        <p className="text-xs text-gray-500">{exp.location}</p>
-                    </div>
+                {/* Timeline Dot */}
+                <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-sm -translate-x-1.5 md:-translate-x-1/2 mt-1.5 z-10"></div>
 
-                    {/* Timeline Dot */}
-                    <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-sm -translate-x-1.5 md:-translate-x-1/2 mt-1.5 z-10"></div>
-
-                    {/* Right Side (Role/Bullets) */}
-                    <div className="md:w-[45%] md:pl-12">
-                        <h5 className="text-md font-bold text-gray-800 mb-3">{exp.role}</h5>
-                        <ul className="space-y-3">
-                            {(isExpanded ? exp.bullets : exp.bullets.slice(0, 4)).map((bullet, i) => (
-                                <li key={i} className="text-sm text-gray-600 leading-relaxed flex items-start">
-                                    <span className="mr-2 mt-1.5 w-1 h-1 bg-gray-400 rounded-full flex-shrink-0"></span>
-                                    {bullet}
-                                </li>
-                            ))}
-                        </ul>
-                        {shouldCollapse && (
-                            <button 
-                                onClick={() => setIsExpanded(!isExpanded)}
-                                className="mt-2 text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
-                            >
-                                {isExpanded ? (
-                                    <>Show Less <ChevronUp size={14} /></>
-                                ) : (
-                                    <>Show More ({exp.bullets.length - 4} items) <ChevronDown size={14} /></>
-                                )}
-                            </button>
-                        )}
-                    </div>
+                {/* Right Side (Role/Bullets) */}
+                <div className="md:w-[45%] md:pl-12">
+                    <h5 className="text-md font-bold text-gray-800 mb-3">{exp.role}</h5>
+                    <ul className="space-y-2">
+                        {exp.bullets.map((bullet, i) => (
+                            <li key={i} className="text-sm text-gray-600 leading-relaxed flex items-start">
+                                <span className="mr-2 mt-1.5 w-1 h-1 bg-gray-400 rounded-full flex-shrink-0"></span>
+                                {bullet}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
-        );
-    };
+        </div>
+    );
 
     // --- JOB MATCHER MODAL ---
     const JobMatchModal = ({ isOpen, onClose }) => {
@@ -640,7 +623,7 @@ const App = () => {
                         <p className="text-lg text-gray-700 leading-relaxed mb-6">
                             {profile.summary}
                         </p>
-                        {/* Removed Certifications/Location blocks from here as requested */}
+                        {/* Certifications and location removed from here as requested, focusing on summary */}
                         <div className="flex items-center gap-3 pt-6 border-t border-gray-100">
                             <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Globe size={20} /></div>
                             <div>
