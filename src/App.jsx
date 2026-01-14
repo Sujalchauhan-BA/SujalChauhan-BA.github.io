@@ -1,156 +1,692 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Github, Linkedin, Mail, Calendar, ExternalLink, Download } from 'lucide-react';
-import { profile, experience, skills, projects } from './data';
 import './App.css';
 
-const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+function App() {
+  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [rates, setRates] = useState({ USD: '---', INR: '---', GBP: '---' });
+  const [marketStatus, setMarketStatus] = useState('initializing...');
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+    const fetchRates = async () => {
+      setMarketStatus("Fetching market data...");
+      try {
+        const response = await fetch('https://api.frankfurter.app/latest?amount=1&from=CAD&to=USD,INR,GBP');
+        if (!response.ok) throw new Error("API Error");
+        const data = await response.json();
+
+        setRates({
+            USD: '$' + data.rates.USD.toFixed(3),
+            INR: '₹' + data.rates.INR.toFixed(2),
+            GBP: '£' + data.rates.GBP.toFixed(3)
+        });
+
+        const date = new Date(data.date).toLocaleDateString("en-CA", { year: 'numeric', month: 'short', day: 'numeric' });
+        setMarketStatus(`Last Update: ${date}`);
+      } catch (error) {
+        console.error(error);
+        setMarketStatus("⚠️ Data Unavailable");
+      }
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    fetchRates();
   }, []);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const togglePrivacy = () => {
+    setShowPrivacy(!showPrivacy);
+  };
+
+  const closePrivacy = (e) => {
+    if (e.target.className === 'privacy-modal') {
+      setShowPrivacy(false);
+    }
+  };
 
   return (
-    <div className="app-container">
-      {/* Navigation */}
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-        <div className="nav-content">
-          <div className="logo">{profile.name}</div>
-
-          <div className="desktop-nav">
-            <a href="#about">About</a>
-            <a href="#experience">Experience</a>
-            <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-          </div>
-
-          <button className="mobile-menu-btn" onClick={toggleMenu} aria-label="Toggle menu">
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
-          <a href="#about" onClick={toggleMenu}>About</a>
-          <a href="#experience" onClick={toggleMenu}>Experience</a>
-          <a href="#skills" onClick={toggleMenu}>Skills</a>
-          <a href="#projects" onClick={toggleMenu}>Projects</a>
-          <a href="#contact" onClick={toggleMenu}>Contact</a>
+    <div>
+      <nav id="navbar">
+        <div className="container nav-container">
+          <a href="#" className="logo">SC<span>.</span></a>
+          <ul className="nav-links">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#skills">Competencies</a></li>
+            <li><a href="#projects">Work</a></li>
+            <li><a href="#experience">Timeline</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="Resume_Sujal_Chauhan.pdf" className="btn-nav" style={{ border: '1px solid var(--accent)', padding: '8px 20px', borderRadius: '4px', color: 'var(--accent)' }}>Resume</a></li>
+          </ul>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section id="about" className="hero-section">
-        <div className="hero-content">
-          <h2 className="hero-greeting">Hello, I'm</h2>
-          <h1 className="hero-name">{profile.name}</h1>
-          <h3 className="hero-title">{profile.title}</h3>
-          <p className="hero-summary">{profile.summary}</p>
+      <section className="hero-section">
+        <div className="bg-shape shape-1"></div>
+        <div className="bg-shape shape-2"></div>
 
-          <div className="hero-actions">
-            <a href="#projects" className="btn btn-primary">
-              View Projects
-            </a>
-            <a href="/Resume_Sujal_Chauhan.pdf" target="_blank" className="btn btn-outline">
-              <Download size={18} />
-              Download Resume
-            </a>
-          </div>
+        <div className="container hero-grid">
+          <div className="hero-content fade-in">
+            <div className="status-badge">
+              <div className="status-dot"></div>
+              Available for Contract & Freelance
+            </div>
+            <h1>Strategic Insight.<br /><span className="highlight">Technical Execution.</span></h1>
+            <p className="hero-desc">
+              Senior Business Analyst & Consultant with 15+ years of experience bridging the gap between business goals and IT delivery. Specializing in Cloud Migration, Digital Transformation, and Process Automation.
+            </p>
+            <div className="hero-cta">
+              <a href="#projects" className="btn btn-primary">View Case Studies</a>
+              <a href="Resume_Sujal_Chauhan.pdf" download className="btn btn-secondary"><i className="fas fa-download" style={{ marginRight: '10px' }}></i> Download CV</a>
+            </div>
 
-          <div className="hero-socials">
-            <a href={profile.social.github} target="_blank" rel="noopener noreferrer"><Github /></a>
-            <a href={profile.social.linkedin} target="_blank" rel="noopener noreferrer"><Linkedin /></a>
-            <a href={`mailto:${profile.social.email}`}><Mail /></a>
-          </div>
-        </div>
-      </section>
-
-      {/* Experience Section */}
-      <section id="experience" className="section-container">
-        <h2 className="section-title">Experience</h2>
-        <div className="timeline">
-          {experience.map((job) => (
-            <div key={job.id} className="timeline-item">
-              <div className="timeline-dot"></div>
-              <div className="timeline-content">
-                <div className="timeline-header">
-                  <h3>{job.role}</h3>
-                  <span className="company">{job.company}</span>
-                </div>
-                <div className="timeline-date">
-                  <Calendar size={14} />
-                  <span>{job.date}</span>
-                </div>
-                <p>{job.description}</p>
+            <div className="hero-stats">
+              <div className="stat">
+                <strong>15+</strong>
+                <span>Years Exp.</span>
+              </div>
+              <div className="stat">
+                <strong>$50M+</strong>
+                <span>Portfolio Value</span>
+              </div>
+              <div className="stat">
+                <strong>10+</strong>
+                <span>Global Markets</span>
               </div>
             </div>
-          ))}
+          </div>
+
+          <div className="hero-visual">
+            <div className="image-wrapper">
+              <img
+                src="Sujal-Profile.jpg"
+                alt="Sujal Chauhan"
+                className="profile-img"
+                onError={(e) => {e.target.src='https://via.placeholder.com/450x500/162032/ffffff?text=Sujal+Chauhan'}}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Skills Section */}
-      <section id="skills" className="section-container bg-darker">
-        <h2 className="section-title">Skills</h2>
-        <div className="skills-grid">
-          {Object.entries(skills).map(([category, items]) => (
-            <div key={category} className="skill-card">
-              <h3>{category}</h3>
-              <div className="skill-tags">
-                {items.map((skill) => (
-                  <span key={skill} className="skill-pill">{skill}</span>
-                ))}
+      <section id="services" className="section-padding bg-secondary">
+        <div className="container">
+          <div className="text-center">
+            <span className="eyebrow">How I Can Help</span>
+            <h2>Consulting Services</h2>
+            <div style={{ width: '50px', height: '3px', background: 'var(--accent)', margin: '20px auto' }}></div>
+            <p style={{ color: 'var(--text-gray)', maxWidth: '600px', margin: '0 auto' }}>
+              Flexible engagement models tailored to your needs. Available for Remote, Hybrid (GTA), and Contract opportunities.
+            </p>
+          </div>
+
+          <div className="service-grid">
+            <div className="service-card">
+              <i className="fas fa-network-wired"></i>
+              <h4>Digital Transformation</h4>
+              <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>
+                Leading end-to-end legacy modernization, from on-premise infrastructure to Cloud (Azure) migration.
+              </p>
+            </div>
+            <div className="service-card">
+              <i className="fas fa-sync-alt"></i>
+              <h4>Process Automation</h4>
+              <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>
+                Eliminating manual bottlenecks using Low-Code/No-Code solutions (Logic Apps) and Generative AI tools.
+              </p>
+            </div>
+            <div className="service-card">
+              <i className="fas fa-chart-pie"></i>
+              <h4>Data Intelligence</h4>
+              <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>
+                Designing Power BI dashboards and KPI frameworks to turn raw data into executive-level insights.
+              </p>
+            </div>
+          </div>
+
+          <div className="industry-tags">
+            <span className="tag">Banking & Fintech</span>
+            <span className="tag">Telecommunications</span>
+            <span className="tag">Supply Chain & ITAD</span>
+            <span className="tag">Service Industry</span>
+            <span className="tag">Cloud Infrastructure</span>
+            <span className="tag">Data Analytics</span>
+            <span className="tag">E-Commerce</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" className="section-padding">
+        <div className="container">
+          <div className="text-center">
+            <span className="eyebrow">Expertise</span>
+            <h2>Core Competencies</h2>
+            <div style={{ width: '50px', height: '3px', background: 'var(--accent)', margin: '20px auto 60px' }}></div>
+          </div>
+
+          <div className="skills-grid">
+            <div className="skill-box">
+              <h3><i className="fas fa-chess-knight"></i> Strategic Analysis</h3>
+              <ul>
+                <li>Requirement Elicitation (SDLC)</li>
+                <li>Gap Analysis & Feasibility Studies</li>
+                <li>Business Case Development</li>
+                <li>ROI & Cost-Benefit Analysis</li>
+                <li>Product Roadmapping</li>
+              </ul>
+            </div>
+            <div className="skill-box">
+              <h3><i className="fas fa-cogs"></i> Process Engineering</h3>
+              <ul>
+                <li>BPMN Modeling (Visio/Lucid)</li>
+                <li>Workflow Automation (Logic Apps)</li>
+                <li>AS-IS / TO-BE Process Mapping</li>
+                <li>Value Stream Mapping</li>
+                <li>Generative AI Implementation</li>
+              </ul>
+            </div>
+            <div className="skill-box">
+              <h3><i className="fas fa-code"></i> Technical Skills</h3>
+              <ul>
+                <li>Azure Fundamentals (AZ-900)</li>
+                <li>SQL Data Querying & Manipulation</li>
+                <li>API Integration (REST/SOAP)</li>
+                <li>System Architecture Concepts</li>
+                <li>Data Modeling</li>
+              </ul>
+            </div>
+            <div className="skill-box">
+              <h3><i className="fas fa-database"></i> Data & Tools</h3>
+              <ul>
+                <li>Power BI & Tableau</li>
+                <li>JIRA & Confluence</li>
+                <li>Microsoft Dynamics 365</li>
+                <li>Salesforce CRM</li>
+                <li>ServiceNow</li>
+              </ul>
+            </div>
+            <div className="skill-box">
+              <h3><i className="fas fa-users"></i> Soft Skills</h3>
+              <ul>
+                <li>Managing Ambiguity</li>
+                <li>Stakeholder Negotiation</li>
+                <li>Cross-Functional Leadership</li>
+                <li>Conflict Resolution</li>
+                <li>Change Management</li>
+              </ul>
+            </div>
+            <div className="skill-box">
+              <h3><i className="fas fa-globe"></i> Domain Expertise</h3>
+              <ul>
+                <li>Banking (KYC/AML)</li>
+                <li>Telecom Interconnection</li>
+                <li>IT Asset Disposition (ITAD)</li>
+                <li>Regulatory Compliance</li>
+                <li>Vendor Management</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" className="section-padding bg-secondary">
+        <div className="container">
+          <div className="text-center">
+            <span className="eyebrow">Case Studies</span>
+            <h2>Project Highlights</h2>
+            <div style={{ width: '50px', height: '3px', background: 'var(--accent)', margin: '20px auto 60px' }}></div>
+          </div>
+
+          <div className="project-card">
+            <div className="project-content">
+              <span className="project-meta">Fintech / Cloud</span>
+              <h3>Banking Cloud Migration & KYC Automation</h3>
+              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
+                <strong>Challenge:</strong> A banking unit faced 3-5 day customer onboarding cycles due to manual paper checks and siloed legacy infrastructure, creating high regulatory risk.
+              </p>
+              <p style={{ color: 'var(--text-gray)' }}>
+                <strong>Solution:</strong> Spearheaded technical requirements for migrating 12 apps to Azure. Designed an event-driven Logic Apps workflow to automate document verification, routing only exceptions to humans.
+              </p>
+            </div>
+            <div className="project-stats">
+              <div className="metric">
+                <strong>-45%</strong>
+                <span>Verification Time</span>
+              </div>
+              <div className="metric">
+                <strong>99.9%</strong>
+                <span>System Uptime</span>
               </div>
             </div>
-          ))}
+          </div>
+
+          <div className="project-card">
+            <div className="project-content">
+              <span className="project-meta">E-Commerce / Logistics</span>
+              <h3>B2C Platform Digital Transformation</h3>
+              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
+                <strong>Challenge:</strong> The client lost revenue by bulk-selling IT assets. They lacked a direct-to-consumer channel to maximize recovery value from secondary markets.
+              </p>
+              <p style={{ color: 'var(--text-gray)' }}>
+                <strong>Solution:</strong> Led functional design for a bespoke resale platform integrated with Dynamics 365. Defined API specs for real-time inventory sync and order management.
+              </p>
+            </div>
+            <div className="project-stats">
+              <div className="metric">
+                <strong>+25%</strong>
+                <span>Secondary Revenue</span>
+              </div>
+              <div className="metric">
+                <strong>30%</strong>
+                <span>Forecast Accuracy</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="project-card">
+            <div className="project-content">
+              <span className="project-meta">CRM / Enterprise Systems</span>
+              <h3>Dynamics 365 & CRM Integration</h3>
+              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
+                <strong>Challenge:</strong> Disconnected sales and production systems led to data discrepancies, inventory errors, and missed sales opportunities across the enterprise.
+              </p>
+              <p style={{ color: 'var(--text-gray)' }}>
+                <strong>Solution:</strong> Managed gap analysis and data mapping for a full Dynamics 365 integration. Facilitated JAD sessions to align Business Development and Production workflows.
+              </p>
+            </div>
+            <div className="project-stats">
+              <div className="metric">
+                <strong>100%</strong>
+                <span>Data Integrity</span>
+              </div>
+              <div className="metric">
+                <strong>Real-time</strong>
+                <span>Inventory Sync</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="project-card">
+            <div className="project-content">
+              <span className="project-meta">Telecom / International</span>
+              <h3>Global Market Expansion & Interconnection</h3>
+              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
+                <strong>Challenge:</strong> Expanding voice/data services into new international markets was stalled by complex regulatory hurdles and undefined technical requirements.
+              </p>
+              <p style={{ color: 'var(--text-gray)' }}>
+                <strong>Solution:</strong> Conducted feasibility studies and negotiated bilateral agreements. Mapped "To-Be" deployment workflows to ensure technical and commercial compliance.
+              </p>
+            </div>
+            <div className="project-stats">
+              <div className="metric">
+                <strong>$MM</strong>
+                <span>Deal Value</span>
+              </div>
+              <div className="metric">
+                <strong>10+</strong>
+                <span>New Markets</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="project-card">
+            <div className="project-content">
+              <span className="project-meta">Support Operations</span>
+              <h3>Call Center Workflow Optimization</h3>
+              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
+                <strong>Challenge:</strong> High average handle time (AHT) and inconsistent agent knowledge led to low First Contact Resolution (FCR) rates for a major tech client.
+              </p>
+              <p style={{ color: 'var(--text-gray)' }}>
+                <strong>Solution:</strong> Created a centralized Knowledge Base and standardized SOPs. Analyzed call data to optimize shift scheduling and agent training modules.
+              </p>
+            </div>
+            <div className="project-stats">
+              <div className="metric">
+                <strong>+15%</strong>
+                <span>FCR Rate</span>
+              </div>
+              <div className="metric">
+                <strong>-20%</strong>
+                <span>Resolution Time</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="section-container">
-        <h2 className="section-title">Featured Projects</h2>
-        <div className="projects-grid">
-          {projects.map((project) => (
-            <div key={project.id} className="project-card">
-              <div className="project-content">
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <div className="project-tech">
-                  {project.tech.map((t) => (
-                    <span key={t} className="tech-tag">{t}</span>
-                  ))}
-                </div>
-                <a href={project.link} className="project-link">
-                  View Project <ExternalLink size={16} />
+      <section id="experience" className="section-padding">
+        <div className="container">
+          <div className="text-center">
+            <span className="eyebrow">Experience</span>
+            <h2>Professional Timeline</h2>
+            <div style={{ width: '50px', height: '3px', background: 'var(--accent)', margin: '20px auto 60px' }}></div>
+          </div>
+
+          <div className="timeline-wrapper">
+            <div className="timeline-item">
+              <div className="role-header">
+                <span className="role-date">March 2025 - Present</span>
+                <h3 className="role-title">Senior Business Analyst</h3>
+                <span className="role-company">BigLop | Mississauga, ON</span>
+              </div>
+              <div className="role-details">
+                <ul>
+                  <li>Spearheaded technical requirements gathering for migrating 12 mission-critical banking apps to Azure, ensuring 99.9% uptime.</li>
+                  <li>Architected business logic using Azure Logic Apps to automate KYC workflows, reducing verification time by 45%.</li>
+                  <li>Designed Power BI dashboards for C-suite executives, reducing manual compliance reporting by 40 hours/month.</li>
+                  <li>Led functional decomposition for a modern ERP system, facilitating JAD sessions to ensure regulatory compliance.</li>
+                  <li>Acted as Proxy Product Owner, facilitating sprint planning and backlog refinement which improved team velocity by 25%.</li>
+                  <li>Managed end-to-end User Acceptance Testing (UAT) cycles with 20+ business users, ensuring zero critical defects.</li>
+                  <li>Developed and maintained RACI charts to clarify roles across IT, Compliance, and Operations teams.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="timeline-item">
+              <div className="role-header">
+                <span className="role-date">April 2021 - Feb 2025</span>
+                <h3 className="role-title">Senior Business Analyst & Process Lead</h3>
+                <span className="role-company">Quantum Lifecycle Partners LP | Brampton, ON</span>
+              </div>
+              <div className="role-details">
+                <ul>
+                  <li>Spearheaded requirements and functional design for a high-volume B2C resale platform, driving a 25% revenue increase.</li>
+                  <li>Led gap analysis for Microsoft Dynamics 365 integration, ensuring seamless data synchronization across workflows.</li>
+                  <li>Deployed Power BI dashboards to track Customer Lifecycle KPIs, improving revenue forecast accuracy by 30%.</li>
+                  <li>Defined functional requirements for ITAD workflows (asset tracking/security), creating detailed BPMN maps.</li>
+                  <li>Established Agile requirements governance that reduced overall project delivery timelines by 15-20%.</li>
+                  <li>Managed relationships with 3rd-party logistics providers, negotiating SLAs for API integrations.</li>
+                  <li>Conducted comprehensive risk assessments for asset recovery workflows, reducing operational risk by 15%.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="timeline-item">
+              <div className="role-header">
+                <span className="role-date">Nov 2019 - April 2021</span>
+                <h3 className="role-title">Process Improvement Supervisor</h3>
+                <span className="role-company">Teleperformance | Toronto, ON</span>
+              </div>
+              <div className="role-details">
+                <ul>
+                  <li>Analyzed support metrics to identify bottlenecks, implementing improvements that reduced resolution time by 20%.</li>
+                  <li>Created centralized SOPs and knowledge bases, directly resulting in a 15% increase in First Contact Resolution (FCR).</li>
+                  <li>Supervised a team of 15 agents, conducting performance audits to maintain high service standards for Apple.</li>
+                  <li>Analyzed call volume patterns to optimize shift scheduling, ensuring 95% SLA adherence during peaks.</li>
+                  <li>Monitored compliance with client SLAs, proactively identifying and resolving escalation risks.</li>
+                  <li>Maintained CSAT scores above 85% through targeted coaching and real-time intervention.</li>
+                  <li>Acted as the cross-functional bridge between front-line support and engineering teams for technical issues.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="timeline-item">
+              <div className="role-header">
+                <span className="role-date">Jan 2014 - Sept 2018</span>
+                <h3 className="role-title">Senior Business Analyst (Strategic Projects)</h3>
+                <span className="role-company">Progressive Telecom LLC | India</span>
+              </div>
+              <div className="role-details">
+                <ul>
+                  <li>Conducted Cost-Benefit Analysis (CBA) for international market expansions, presenting recommendations to executives.</li>
+                  <li>Defined technical and commercial requirements for telecom interconnection projects, bridging Network and Finance teams.</li>
+                  <li>Mapped "As-Is" vs. "To-Be" deployment workflows, identifying bottlenecks and implementing SOPs to enhance quality.</li>
+                  <li>Performed benchmarking to identify pricing gaps, informing a strategy that captured 10% additional market share.</li>
+                  <li>Spearheaded negotiation of bilateral agreements, defining SLAs and KPIs for long-term partnership stability.</li>
+                  <li>Analyzed international telecom regulations to define compliance requirements for new market entries.</li>
+                  <li>Managed full-cycle interconnection projects from feasibility analysis to final testing and deployment.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="timeline-item">
+              <div className="role-header">
+                <span className="role-date">Aug 2012 - Nov 2013</span>
+                <h3 className="role-title">Carrier Relations Manager</h3>
+                <span className="role-company">Axistel FZE | UAE</span>
+              </div>
+              <div className="role-details">
+                <ul>
+                  <li>Led and managed international carrier interconnection projects, ensuring seamless integration and compliance.</li>
+                  <li>Negotiated and finalized interconnection agreements with global carriers, increasing revenue margins.</li>
+                  <li>Managed end-to-end project workflows, aligning Agile methodologies with business objectives for efficiency.</li>
+                  <li>Monitored revenue streams and traffic patterns to optimize routing and exceed financial targets.</li>
+                  <li>Collaborated with Finance and Technical Operations to ensure seamless service execution and billing.</li>
+                  <li>Led risk management initiatives, identifying potential failure points in interconnection processes.</li>
+                  <li>Developed key carrier relationships to improve retention rates and ensure long-term partnerships.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="timeline-item">
+              <div className="role-header">
+                <span className="role-date">Nov 2011 - Aug 2012</span>
+                <h3 className="role-title">Account Manager</h3>
+                <span className="role-company">Spactron Limited | Various Locations</span>
+              </div>
+              <div className="role-details">
+                <ul>
+                  <li>Managed account onboarding and technical setup, ensuring seamless integration for new partners.</li>
+                  <li>Negotiated traffic flow and prioritized high-quality CLI routes to enhance service reliability.</li>
+                  <li>Collaborated with Sales and Technical teams to align services with specific client requirements.</li>
+                  <li>Conducted market analysis and route optimization strategies to improve cost efficiency.</li>
+                  <li>Led client communications and contract discussions to ensure smooth implementation of agreements.</li>
+                  <li>Coordinated internal quality assurance processes, reducing service disruptions.</li>
+                  <li>Identified and capitalized on new revenue opportunities through proactive business development.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="timeline-item">
+              <div className="role-header">
+                <span className="role-date">June 2010 - Oct 2011</span>
+                <h3 className="role-title">Director of Business Development</h3>
+                <span className="role-company">Progressive Telecom LLC | India</span>
+              </div>
+              <div className="role-details">
+                <ul>
+                  <li>Developed strategic business expansion initiatives, identifying and onboarding new telecom partners.</li>
+                  <li>Led end-to-end interconnection projects, managing negotiations, agreements, and technical provisioning.</li>
+                  <li>Negotiated multimillion-dollar bilateral agreements, significantly improving company margins.</li>
+                  <li>Managed cross-functional collaboration between Sales, Network Ops, and Finance to streamline workflows.</li>
+                  <li>Implemented customer retention strategies, fostering strong relationships with key providers.</li>
+                  <li>Led resolution of complex interconnection challenges, troubleshooting network traffic flow with technical teams.</li>
+                  <li>Represented the company at global industry events to drive lead generation and brand presence.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="timeline-item">
+              <div className="role-header">
+                <span className="role-date">June 2009 - March 2010</span>
+                <h3 className="role-title">Carrier Relations Manager</h3>
+                <span className="role-company">Bridgevoice Inc. | India</span>
+              </div>
+              <div className="role-details">
+                <ul>
+                  <li>Developed strategic relationships with international telecom carriers to ensure smooth interconnection.</li>
+                  <li>Led market research and business case evaluations to identify new partnership opportunities.</li>
+                  <li>Negotiated interconnect agreements, ensuring cost-effective routing and improved margins.</li>
+                  <li>Monitored traffic flow to ensure optimal performance and revenue growth.</li>
+                  <li>Collaborated with technical and finance teams to streamline operational workflows.</li>
+                  <li>Oversaw revenue tracking and reporting for accurate financial forecasting.</li>
+                  <li>Implemented account management strategies to strengthen vendor relationships.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" className="section-padding">
+        <div className="container">
+          <div className="contact-split-container">
+
+            <div className="contact-info-col">
+              <span className="eyebrow">Get In Touch</span>
+              <h2>Let's Start a Conversation</h2>
+              <p style={{ color: 'var(--text-gray)', marginBottom: '2rem' }}>
+                Ready to drive results? I am currently open to Contract, Freelance, and Full-time opportunities in the Greater Toronto Area (GTA) or Remote.
+              </p>
+
+              <ul className="contact-list">
+                <li>
+                  <i className="fas fa-phone-alt"></i>
+                  <div>
+                    <strong style={{ display: 'block', color: 'var(--white)', fontSize: '0.9rem' }}>Call Me</strong>
+                    <a href="tel:+16476679819" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>+1 647 667 9819</a>
+                  </div>
+                </li>
+                <li>
+                  <i className="fas fa-envelope"></i>
+                  <div>
+                    <strong style={{ display: 'block', color: 'var(--white)', fontSize: '0.9rem' }}>Email Me</strong>
+                    <a href="mailto:sujal.chauhan@live.in" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>sujal.chauhan@live.in</a>
+                  </div>
+                </li>
+                <li>
+                  <i className="fab fa-linkedin-in"></i>
+                  <div>
+                    <strong style={{ display: 'block', color: 'var(--white)', fontSize: '0.9rem' }}>Connect</strong>
+                    <a href="https://linkedin.com/in/sujalchauhan" target="_blank" rel="noreferrer" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>linkedin.com/in/sujalchauhan</a>
+                  </div>
+                </li>
+                <li>
+                  <i className="fas fa-map-marker-alt"></i>
+                  <div>
+                    <strong style={{ display: 'block', color: 'var(--white)', fontSize: '0.9rem' }}>Location</strong>
+                    Greater Toronto Area, Ontario
+                  </div>
+                </li>
+              </ul>
+
+              <div style={{ marginTop: '40px' }}>
+                <a href="Resume_Sujal_Chauhan.pdf" download className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                  <i className="fas fa-file-pdf" style={{ marginRight: '10px' }}></i> Download Resume
                 </a>
               </div>
             </div>
-          ))}
+
+            <div className="contact-form-col">
+              <form action="https://formspree.io/f/xblnyday" method="POST">
+                <div className="form-group">
+                  <label htmlFor="name">Full Name *</label>
+                  <input type="text" id="name" name="name" className="form-control" placeholder="John Doe" required />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="email">Email Address *</label>
+                  <input type="email" id="email" name="email" className="form-control" placeholder="john@example.com" required />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="subject">Subject *</label>
+                  <input type="text" id="subject" name="_subject" className="form-control" placeholder="Project Opportunity" required />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="message">Message *</label>
+                  <textarea id="message" name="message" className="form-control" rows="5" placeholder="Tell me about your project or opportunity..." required></textarea>
+                </div>
+
+                <input type="text" name="_gotcha" style={{ display: 'none' }} />
+
+                <button type="submit" className="btn-submit">
+                  <i className="fas fa-paper-plane"></i> Send Message
+                </button>
+              </form>
+            </div>
+
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer id="contact" className="footer">
-        <div className="footer-content">
-          <h3>Let's Connect</h3>
-          <p>Open for new opportunities and collaborations.</p>
-          <div className="footer-socials">
-             <a href={profile.social.github} target="_blank" rel="noopener noreferrer"><Github size={20} /></a>
-             <a href={profile.social.linkedin} target="_blank" rel="noopener noreferrer"><Linkedin size={20} /></a>
-             <a href={`mailto:${profile.social.email}`}><Mail size={20} /></a>
+      <section className="section-padding" style={{ background: 'var(--primary)' }}>
+        <div className="container">
+          <h2 className="text-center" style={{ marginBottom: '30px' }}>Schedule a Call</h2>
+
+          <div style={{ background: 'var(--white)', maxWidth: '600px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+            <div className="calendly-inline-widget"
+                 data-url="https://calendly.com/sujal-chauhan?hide_landing_page_details=1&hide_gdpr_banner=1"
+                 style={{ minWidth: '320px', height: '650px' }}>
+            </div>
           </div>
-          <p className="copyright">© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+        </div>
+      </section>
+
+      <footer>
+        <div className="container text-center" style={{ padding: '40px 0', borderTop: '1px solid var(--border)' }}>
+          <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem' }}>
+            &copy; 2025 Sujal Chauhan. All Rights Reserved. <br />
+            <button
+                onClick={togglePrivacy}
+                style={{ background: 'none', border: 'none', color: 'var(--text-gray)', textDecoration: 'underline', marginTop: '10px', display: 'inline-block', cursor: 'pointer' }}
+            >
+                Privacy Policy
+            </button>
+          </p>
         </div>
       </footer>
+
+      {showPrivacy && (
+        <div id="privacyModal" className="privacy-modal" onClick={closePrivacy}>
+          <div className="privacy-content" onClick={(e) => e.stopPropagation()}>
+            <span className="close-modal" onClick={togglePrivacy}>&times;</span>
+            <h3>Privacy Policy</h3>
+            <div style={{ width: '50px', height: '3px', background: 'var(--accent)', margin: '10px 0 20px' }}></div>
+
+            <p><strong>1. Data Collection</strong><br />
+            This website collects data to improve user experience and facilitate communication. By using this site, you consent to the use of the following tools:</p>
+
+            <ul>
+              <li><strong>Google Analytics (GA4):</strong> Collects anonymous usage data (pages visited, session duration) to help analyze site traffic.</li>
+              <li><strong>Microsoft Clarity:</strong> Records session heatmaps and interactions to understand user behavior and improve site usability.</li>
+              <li><strong>Formspree:</strong> When you submit the contact form, your name, email, and message are securely transmitted to me via email for the purpose of replying to your inquiry.</li>
+              <li><strong>Calendly:</strong> If you schedule a meeting, your appointment details are processed by Calendly to manage the booking.</li>
+            </ul>
+
+            <p><strong>2. Cookies</strong><br />
+            We use cookies to ensure the proper functioning of analytics tools. You may disable cookies in your browser settings, though this may affect site performance.</p>
+
+            <p><strong>3. Your Rights</strong><br />
+            Your data is never sold to third parties. If you wish to request the deletion of your personal communication data, please contact me directly at <a href="mailto:sujal.chauhan@live.in" style={{ color: 'var(--accent)' }}>sujal.chauhan@live.in</a>.</p>
+          </div>
+        </div>
+      )}
+
+      <div className="market-card">
+        <div className="market-header">
+          <span className="market-title">🇨🇦 Live Exchange Rates</span>
+          <span className="market-status" style={{ color: marketStatus.includes("Unavailable") ? 'red' : '#888' }}>{marketStatus}</span>
+        </div>
+
+        <div className="currency-grid">
+
+          <div className="currency-item">
+            <span className="pair-label">USA (USD)</span>
+            <div style={{ display: 'flex', alignItems: 'baseline' }}>
+              <span className="exchange-rate" style={{ opacity: 1, transition: 'opacity 0.2s' }}>{rates.USD}</span>
+              <span className="trend-indicator">🇺🇸</span>
+            </div>
+            <span style={{ fontSize: '11px', color: '#999' }}>1 CAD = USD</span>
+          </div>
+
+          <div className="currency-item">
+            <span className="pair-label">India (INR)</span>
+            <div style={{ display: 'flex', alignItems: 'baseline' }}>
+              <span className="exchange-rate" style={{ opacity: 1, transition: 'opacity 0.2s' }}>{rates.INR}</span>
+              <span className="trend-indicator">🇮🇳</span>
+            </div>
+            <span style={{ fontSize: '11px', color: '#999' }}>1 CAD = INR</span>
+          </div>
+
+          <div className="currency-item">
+            <span className="pair-label">UK (GBP)</span>
+            <div style={{ display: 'flex', alignItems: 'baseline' }}>
+              <span className="exchange-rate" style={{ opacity: 1, transition: 'opacity 0.2s' }}>{rates.GBP}</span>
+              <span className="trend-indicator">🇬🇧</span>
+            </div>
+            <span style={{ fontSize: '11px', color: '#999' }}>1 CAD = GBP</span>
+          </div>
+
+        </div>
+      </div>
     </div>
   );
-};
+}
 
 export default App;
