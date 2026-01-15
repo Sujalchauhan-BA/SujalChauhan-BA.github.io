@@ -41,11 +41,10 @@ const GeminiChat = () => {
     try {
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (!apiKey) {
-        throw new Error("API Key missing. Please set VITE_GEMINI_API_KEY.");
+        throw new Error("API Key missing. Please set VITE_GEMINI_API_KEY in your environment.");
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
 
@@ -53,17 +52,14 @@ const GeminiChat = () => {
       ${JSON.stringify(resumeData)}
       `;
 
+      // Use systemInstruction for better context handling
+      const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash",
+        systemInstruction: systemPrompt
+      });
+
       const chat = model.startChat({
-        history: [
-          {
-            role: "user",
-            parts: [{ text: systemPrompt }],
-          },
-          {
-            role: "model",
-            parts: [{ text: "Understood. I am ready to answer questions about Sujal Chauhan based on his resume." }],
-          },
-        ],
+        history: [], // History management can be improved by appending previous session messages if needed, but keeping it simple for now to avoid context limit issues with large history + system prompt redundancy.
       });
 
       const result = await chat.sendMessage(input);
@@ -74,9 +70,15 @@ const GeminiChat = () => {
     } catch (error) {
       console.error("Gemini Error:", error);
       let errorMessage = "I'm having trouble connecting right now. Please try again later.";
+
       if (error.message.includes("API Key missing")) {
-        errorMessage = "Gemini API Key is missing in the environment variables (VITE_GEMINI_API_KEY).";
+        errorMessage = "Configuration Error: API Key is missing.";
+      } else if (error.message.includes("403")) {
+          errorMessage = "Access Error: The API key is invalid or has expired.";
+      } else if (error.message.includes("429")) {
+          errorMessage = "Service Busy: Too many requests. Please try again in a moment.";
       }
+
       setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
     } finally {
       setIsLoading(false);
