@@ -1,34 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
+import GeminiChat from './components/GeminiChat';
+import GitHubProjects from './components/GitHubProjects';
+import MarketRatesWidget from './components/MarketRatesWidget';
 
 function App() {
   const [showPrivacy, setShowPrivacy] = useState(false);
-  const [rates, setRates] = useState({ USD: '---', INR: '---', GBP: '---' });
-  const [marketStatus, setMarketStatus] = useState('initializing...');
-
-  useEffect(() => {
-    const fetchRates = async () => {
-      setMarketStatus("Fetching market data...");
-      try {
-        const response = await fetch('https://api.frankfurter.app/latest?amount=1&from=CAD&to=USD,INR,GBP');
-        if (!response.ok) throw new Error("API Error");
-        const data = await response.json();
-
-        setRates({
-            USD: '$' + data.rates.USD.toFixed(3),
-            INR: '₹' + data.rates.INR.toFixed(2),
-            GBP: '£' + data.rates.GBP.toFixed(3)
-        });
-
-        const date = new Date(data.date).toLocaleDateString("en-CA", { year: 'numeric', month: 'short', day: 'numeric' });
-        setMarketStatus(`Last Update: ${date}`);
-      } catch (error) {
-        console.error(error);
-        setMarketStatus("⚠️ Data Unavailable");
-      }
-    };
-    fetchRates();
-  }, []);
 
   const togglePrivacy = () => {
     setShowPrivacy(!showPrivacy);
@@ -227,125 +204,15 @@ function App() {
       <section id="projects" className="section-padding bg-secondary">
         <div className="container">
           <div className="text-center">
-            <span className="eyebrow">Case Studies</span>
-            <h2>Project Highlights</h2>
+            <span className="eyebrow">Recent Work</span>
+            <h2>GitHub Projects</h2>
             <div style={{ width: '50px', height: '3px', background: 'var(--accent)', margin: '20px auto 60px' }}></div>
+            <p style={{ color: 'var(--text-gray)', maxWidth: '600px', margin: '-40px auto 40px' }}>
+              A selection of my latest technical repositories and automation scripts.
+            </p>
           </div>
 
-          <div className="project-card">
-            <div className="project-content">
-              <span className="project-meta">Fintech / Cloud</span>
-              <h3>Banking Cloud Migration & KYC Automation</h3>
-              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
-                <strong>Challenge:</strong> A banking unit faced 3-5 day customer onboarding cycles due to manual paper checks and siloed legacy infrastructure, creating high regulatory risk.
-              </p>
-              <p style={{ color: 'var(--text-gray)' }}>
-                <strong>Solution:</strong> Spearheaded technical requirements for migrating 12 apps to Azure. Designed an event-driven Logic Apps workflow to automate document verification, routing only exceptions to humans.
-              </p>
-            </div>
-            <div className="project-stats">
-              <div className="metric">
-                <strong>-45%</strong>
-                <span>Verification Time</span>
-              </div>
-              <div className="metric">
-                <strong>99.9%</strong>
-                <span>System Uptime</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="project-card">
-            <div className="project-content">
-              <span className="project-meta">E-Commerce / Logistics</span>
-              <h3>B2C Platform Digital Transformation</h3>
-              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
-                <strong>Challenge:</strong> The client lost revenue by bulk-selling IT assets. They lacked a direct-to-consumer channel to maximize recovery value from secondary markets.
-              </p>
-              <p style={{ color: 'var(--text-gray)' }}>
-                <strong>Solution:</strong> Led functional design for a bespoke resale platform integrated with Dynamics 365. Defined API specs for real-time inventory sync and order management.
-              </p>
-            </div>
-            <div className="project-stats">
-              <div className="metric">
-                <strong>+25%</strong>
-                <span>Secondary Revenue</span>
-              </div>
-              <div className="metric">
-                <strong>30%</strong>
-                <span>Forecast Accuracy</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="project-card">
-            <div className="project-content">
-              <span className="project-meta">CRM / Enterprise Systems</span>
-              <h3>Dynamics 365 & CRM Integration</h3>
-              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
-                <strong>Challenge:</strong> Disconnected sales and production systems led to data discrepancies, inventory errors, and missed sales opportunities across the enterprise.
-              </p>
-              <p style={{ color: 'var(--text-gray)' }}>
-                <strong>Solution:</strong> Managed gap analysis and data mapping for a full Dynamics 365 integration. Facilitated JAD sessions to align Business Development and Production workflows.
-              </p>
-            </div>
-            <div className="project-stats">
-              <div className="metric">
-                <strong>100%</strong>
-                <span>Data Integrity</span>
-              </div>
-              <div className="metric">
-                <strong>Real-time</strong>
-                <span>Inventory Sync</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="project-card">
-            <div className="project-content">
-              <span className="project-meta">Telecom / International</span>
-              <h3>Global Market Expansion & Interconnection</h3>
-              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
-                <strong>Challenge:</strong> Expanding voice/data services into new international markets was stalled by complex regulatory hurdles and undefined technical requirements.
-              </p>
-              <p style={{ color: 'var(--text-gray)' }}>
-                <strong>Solution:</strong> Conducted feasibility studies and negotiated bilateral agreements. Mapped "To-Be" deployment workflows to ensure technical and commercial compliance.
-              </p>
-            </div>
-            <div className="project-stats">
-              <div className="metric">
-                <strong>$MM</strong>
-                <span>Deal Value</span>
-              </div>
-              <div className="metric">
-                <strong>10+</strong>
-                <span>New Markets</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="project-card">
-            <div className="project-content">
-              <span className="project-meta">Support Operations</span>
-              <h3>Call Center Workflow Optimization</h3>
-              <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
-                <strong>Challenge:</strong> High average handle time (AHT) and inconsistent agent knowledge led to low First Contact Resolution (FCR) rates for a major tech client.
-              </p>
-              <p style={{ color: 'var(--text-gray)' }}>
-                <strong>Solution:</strong> Created a centralized Knowledge Base and standardized SOPs. Analyzed call data to optimize shift scheduling and agent training modules.
-              </p>
-            </div>
-            <div className="project-stats">
-              <div className="metric">
-                <strong>+15%</strong>
-                <span>FCR Rate</span>
-              </div>
-              <div className="metric">
-                <strong>-20%</strong>
-                <span>Resolution Time</span>
-              </div>
-            </div>
-          </div>
+          <GitHubProjects />
 
         </div>
       </section>
@@ -595,19 +462,6 @@ function App() {
         </div>
       </section>
 
-      <section className="section-padding" style={{ background: 'var(--primary)' }}>
-        <div className="container">
-          <h2 className="text-center" style={{ marginBottom: '30px' }}>Schedule a Call</h2>
-
-          <div style={{ background: 'var(--white)', maxWidth: '600px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
-            <div className="calendly-inline-widget"
-                 data-url="https://calendly.com/sujal-chauhan?hide_landing_page_details=1&hide_gdpr_banner=1"
-                 style={{ minWidth: '320px', height: '650px' }}>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <footer>
         <div className="container text-center" style={{ padding: '40px 0', borderTop: '1px solid var(--border)' }}>
           <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem' }}>
@@ -636,7 +490,6 @@ function App() {
               <li><strong>Google Analytics (GA4):</strong> Collects anonymous usage data (pages visited, session duration) to help analyze site traffic.</li>
               <li><strong>Microsoft Clarity:</strong> Records session heatmaps and interactions to understand user behavior and improve site usability.</li>
               <li><strong>Formspree:</strong> When you submit the contact form, your name, email, and message are securely transmitted to me via email for the purpose of replying to your inquiry.</li>
-              <li><strong>Calendly:</strong> If you schedule a meeting, your appointment details are processed by Calendly to manage the booking.</li>
             </ul>
 
             <p><strong>2. Cookies</strong><br />
@@ -648,43 +501,8 @@ function App() {
         </div>
       )}
 
-      <div className="market-card">
-        <div className="market-header">
-          <span className="market-title">🇨🇦 Live Exchange Rates</span>
-          <span className="market-status" style={{ color: marketStatus.includes("Unavailable") ? 'red' : '#888' }}>{marketStatus}</span>
-        </div>
-
-        <div className="currency-grid">
-
-          <div className="currency-item">
-            <span className="pair-label">USA (USD)</span>
-            <div style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span className="exchange-rate" style={{ opacity: 1, transition: 'opacity 0.2s' }}>{rates.USD}</span>
-              <span className="trend-indicator">🇺🇸</span>
-            </div>
-            <span style={{ fontSize: '11px', color: '#999' }}>1 CAD = USD</span>
-          </div>
-
-          <div className="currency-item">
-            <span className="pair-label">India (INR)</span>
-            <div style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span className="exchange-rate" style={{ opacity: 1, transition: 'opacity 0.2s' }}>{rates.INR}</span>
-              <span className="trend-indicator">🇮🇳</span>
-            </div>
-            <span style={{ fontSize: '11px', color: '#999' }}>1 CAD = INR</span>
-          </div>
-
-          <div className="currency-item">
-            <span className="pair-label">UK (GBP)</span>
-            <div style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span className="exchange-rate" style={{ opacity: 1, transition: 'opacity 0.2s' }}>{rates.GBP}</span>
-              <span className="trend-indicator">🇬🇧</span>
-            </div>
-            <span style={{ fontSize: '11px', color: '#999' }}>1 CAD = GBP</span>
-          </div>
-
-        </div>
-      </div>
+      <MarketRatesWidget />
+      <GeminiChat />
     </div>
   );
 }
