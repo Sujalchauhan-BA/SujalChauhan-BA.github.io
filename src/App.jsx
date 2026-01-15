@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './App.css';
 import GeminiChat from './components/GeminiChat';
-import GitHubProjects from './components/GitHubProjects';
 import MarketRatesWidget from './components/MarketRatesWidget';
+import { resumeData } from './resumeData';
 
 function App() {
   const [showPrivacy, setShowPrivacy] = useState(false);
@@ -204,15 +204,38 @@ function App() {
       <section id="projects" className="section-padding bg-secondary">
         <div className="container">
           <div className="text-center">
-            <span className="eyebrow">Recent Work</span>
-            <h2>GitHub Projects</h2>
+            <span className="eyebrow">Case Studies</span>
+            <h2>Project Highlights</h2>
             <div style={{ width: '50px', height: '3px', background: 'var(--accent)', margin: '20px auto 60px' }}></div>
-            <p style={{ color: 'var(--text-gray)', maxWidth: '600px', margin: '-40px auto 40px' }}>
-              A selection of my latest technical repositories and automation scripts.
-            </p>
           </div>
 
-          <GitHubProjects />
+          {resumeData.projects.map((project, index) => (
+            <div key={index} className="project-card">
+              <div className="project-content">
+                <span className="project-meta">{project.category}</span>
+                <h3>{project.title}</h3>
+                <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
+                  <strong>Challenge:</strong> {project.challenge}
+                </p>
+                <p style={{ color: 'var(--text-gray)' }}>
+                  <strong>Solution:</strong> {project.solution}
+                </p>
+              </div>
+              <div className="project-stats">
+                {project.metrics.map((metric, i) => {
+                  const parts = metric.split(' ');
+                  const value = parts[0];
+                  const label = parts.slice(1).join(' ');
+                  return (
+                    <div key={i} className="metric">
+                      <strong>{value}</strong>
+                      <span>{label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
 
         </div>
       </section>
@@ -226,158 +249,22 @@ function App() {
           </div>
 
           <div className="timeline-wrapper">
-            <div className="timeline-item">
-              <div className="role-header">
-                <span className="role-date">March 2025 - Present</span>
-                <h3 className="role-title">Senior Business Analyst</h3>
-                <span className="role-company">BigLop | Mississauga, ON</span>
+            {resumeData.experience.map((exp, index) => (
+              <div key={index} className="timeline-item">
+                <div className="role-header">
+                  <span className="role-date">{exp.date}</span>
+                  <h3 className="role-title">{exp.role}</h3>
+                  <span className="role-company">{exp.company} | {exp.location}</span>
+                </div>
+                <div className="role-details">
+                  <ul>
+                    {exp.details.map((detail, i) => (
+                      <li key={i}>{detail}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <div className="role-details">
-                <ul>
-                  <li>Spearheaded technical requirements gathering for migrating 12 mission-critical banking apps to Azure, ensuring 99.9% uptime.</li>
-                  <li>Architected business logic using Azure Logic Apps to automate KYC workflows, reducing verification time by 45%.</li>
-                  <li>Designed Power BI dashboards for C-suite executives, reducing manual compliance reporting by 40 hours/month.</li>
-                  <li>Led functional decomposition for a modern ERP system, facilitating JAD sessions to ensure regulatory compliance.</li>
-                  <li>Acted as Proxy Product Owner, facilitating sprint planning and backlog refinement which improved team velocity by 25%.</li>
-                  <li>Managed end-to-end User Acceptance Testing (UAT) cycles with 20+ business users, ensuring zero critical defects.</li>
-                  <li>Developed and maintained RACI charts to clarify roles across IT, Compliance, and Operations teams.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="timeline-item">
-              <div className="role-header">
-                <span className="role-date">April 2021 - Feb 2025</span>
-                <h3 className="role-title">Senior Business Analyst & Process Lead</h3>
-                <span className="role-company">Quantum Lifecycle Partners LP | Brampton, ON</span>
-              </div>
-              <div className="role-details">
-                <ul>
-                  <li>Spearheaded requirements and functional design for a high-volume B2C resale platform, driving a 25% revenue increase.</li>
-                  <li>Led gap analysis for Microsoft Dynamics 365 integration, ensuring seamless data synchronization across workflows.</li>
-                  <li>Deployed Power BI dashboards to track Customer Lifecycle KPIs, improving revenue forecast accuracy by 30%.</li>
-                  <li>Defined functional requirements for ITAD workflows (asset tracking/security), creating detailed BPMN maps.</li>
-                  <li>Established Agile requirements governance that reduced overall project delivery timelines by 15-20%.</li>
-                  <li>Managed relationships with 3rd-party logistics providers, negotiating SLAs for API integrations.</li>
-                  <li>Conducted comprehensive risk assessments for asset recovery workflows, reducing operational risk by 15%.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="timeline-item">
-              <div className="role-header">
-                <span className="role-date">Nov 2019 - April 2021</span>
-                <h3 className="role-title">Process Improvement Supervisor</h3>
-                <span className="role-company">Teleperformance | Toronto, ON</span>
-              </div>
-              <div className="role-details">
-                <ul>
-                  <li>Analyzed support metrics to identify bottlenecks, implementing improvements that reduced resolution time by 20%.</li>
-                  <li>Created centralized SOPs and knowledge bases, directly resulting in a 15% increase in First Contact Resolution (FCR).</li>
-                  <li>Supervised a team of 15 agents, conducting performance audits to maintain high service standards for Apple.</li>
-                  <li>Analyzed call volume patterns to optimize shift scheduling, ensuring 95% SLA adherence during peaks.</li>
-                  <li>Monitored compliance with client SLAs, proactively identifying and resolving escalation risks.</li>
-                  <li>Maintained CSAT scores above 85% through targeted coaching and real-time intervention.</li>
-                  <li>Acted as the cross-functional bridge between front-line support and engineering teams for technical issues.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="timeline-item">
-              <div className="role-header">
-                <span className="role-date">Jan 2014 - Sept 2018</span>
-                <h3 className="role-title">Senior Business Analyst (Strategic Projects)</h3>
-                <span className="role-company">Progressive Telecom LLC | India</span>
-              </div>
-              <div className="role-details">
-                <ul>
-                  <li>Conducted Cost-Benefit Analysis (CBA) for international market expansions, presenting recommendations to executives.</li>
-                  <li>Defined technical and commercial requirements for telecom interconnection projects, bridging Network and Finance teams.</li>
-                  <li>Mapped "As-Is" vs. "To-Be" deployment workflows, identifying bottlenecks and implementing SOPs to enhance quality.</li>
-                  <li>Performed benchmarking to identify pricing gaps, informing a strategy that captured 10% additional market share.</li>
-                  <li>Spearheaded negotiation of bilateral agreements, defining SLAs and KPIs for long-term partnership stability.</li>
-                  <li>Analyzed international telecom regulations to define compliance requirements for new market entries.</li>
-                  <li>Managed full-cycle interconnection projects from feasibility analysis to final testing and deployment.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="timeline-item">
-              <div className="role-header">
-                <span className="role-date">Aug 2012 - Nov 2013</span>
-                <h3 className="role-title">Carrier Relations Manager</h3>
-                <span className="role-company">Axistel FZE | UAE</span>
-              </div>
-              <div className="role-details">
-                <ul>
-                  <li>Led and managed international carrier interconnection projects, ensuring seamless integration and compliance.</li>
-                  <li>Negotiated and finalized interconnection agreements with global carriers, increasing revenue margins.</li>
-                  <li>Managed end-to-end project workflows, aligning Agile methodologies with business objectives for efficiency.</li>
-                  <li>Monitored revenue streams and traffic patterns to optimize routing and exceed financial targets.</li>
-                  <li>Collaborated with Finance and Technical Operations to ensure seamless service execution and billing.</li>
-                  <li>Led risk management initiatives, identifying potential failure points in interconnection processes.</li>
-                  <li>Developed key carrier relationships to improve retention rates and ensure long-term partnerships.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="timeline-item">
-              <div className="role-header">
-                <span className="role-date">Nov 2011 - Aug 2012</span>
-                <h3 className="role-title">Account Manager</h3>
-                <span className="role-company">Spactron Limited | Various Locations</span>
-              </div>
-              <div className="role-details">
-                <ul>
-                  <li>Managed account onboarding and technical setup, ensuring seamless integration for new partners.</li>
-                  <li>Negotiated traffic flow and prioritized high-quality CLI routes to enhance service reliability.</li>
-                  <li>Collaborated with Sales and Technical teams to align services with specific client requirements.</li>
-                  <li>Conducted market analysis and route optimization strategies to improve cost efficiency.</li>
-                  <li>Led client communications and contract discussions to ensure smooth implementation of agreements.</li>
-                  <li>Coordinated internal quality assurance processes, reducing service disruptions.</li>
-                  <li>Identified and capitalized on new revenue opportunities through proactive business development.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="timeline-item">
-              <div className="role-header">
-                <span className="role-date">June 2010 - Oct 2011</span>
-                <h3 className="role-title">Director of Business Development</h3>
-                <span className="role-company">Progressive Telecom LLC | India</span>
-              </div>
-              <div className="role-details">
-                <ul>
-                  <li>Developed strategic business expansion initiatives, identifying and onboarding new telecom partners.</li>
-                  <li>Led end-to-end interconnection projects, managing negotiations, agreements, and technical provisioning.</li>
-                  <li>Negotiated multimillion-dollar bilateral agreements, significantly improving company margins.</li>
-                  <li>Managed cross-functional collaboration between Sales, Network Ops, and Finance to streamline workflows.</li>
-                  <li>Implemented customer retention strategies, fostering strong relationships with key providers.</li>
-                  <li>Led resolution of complex interconnection challenges, troubleshooting network traffic flow with technical teams.</li>
-                  <li>Represented the company at global industry events to drive lead generation and brand presence.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="timeline-item">
-              <div className="role-header">
-                <span className="role-date">June 2009 - March 2010</span>
-                <h3 className="role-title">Carrier Relations Manager</h3>
-                <span className="role-company">Bridgevoice Inc. | India</span>
-              </div>
-              <div className="role-details">
-                <ul>
-                  <li>Developed strategic relationships with international telecom carriers to ensure smooth interconnection.</li>
-                  <li>Led market research and business case evaluations to identify new partnership opportunities.</li>
-                  <li>Negotiated interconnect agreements, ensuring cost-effective routing and improved margins.</li>
-                  <li>Monitored traffic flow to ensure optimal performance and revenue growth.</li>
-                  <li>Collaborated with technical and finance teams to streamline operational workflows.</li>
-                  <li>Oversaw revenue tracking and reporting for accurate financial forecasting.</li>
-                  <li>Implemented account management strategies to strengthen vendor relationships.</li>
-                </ul>
-              </div>
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
@@ -398,28 +285,28 @@ function App() {
                   <i className="fas fa-phone-alt"></i>
                   <div>
                     <strong style={{ display: 'block', color: 'var(--white)', fontSize: '0.9rem' }}>Call Me</strong>
-                    <a href="tel:+16476679819" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>+1 647 667 9819</a>
+                    <a href={`tel:${resumeData.profile.contact.phone.replace(/ /g,'')}`} style={{ color: 'var(--text-light)', textDecoration: 'none' }}>{resumeData.profile.contact.phone}</a>
                   </div>
                 </li>
                 <li>
                   <i className="fas fa-envelope"></i>
                   <div>
                     <strong style={{ display: 'block', color: 'var(--white)', fontSize: '0.9rem' }}>Email Me</strong>
-                    <a href="mailto:sujal.chauhan@live.in" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>sujal.chauhan@live.in</a>
+                    <a href={`mailto:${resumeData.profile.contact.email}`} style={{ color: 'var(--text-light)', textDecoration: 'none' }}>{resumeData.profile.contact.email}</a>
                   </div>
                 </li>
                 <li>
                   <i className="fab fa-linkedin-in"></i>
                   <div>
                     <strong style={{ display: 'block', color: 'var(--white)', fontSize: '0.9rem' }}>Connect</strong>
-                    <a href="https://linkedin.com/in/sujalchauhan" target="_blank" rel="noreferrer" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>linkedin.com/in/sujalchauhan</a>
+                    <a href={`https://${resumeData.profile.contact.linkedin}`} target="_blank" rel="noreferrer" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>{resumeData.profile.contact.linkedin}</a>
                   </div>
                 </li>
                 <li>
                   <i className="fas fa-map-marker-alt"></i>
                   <div>
                     <strong style={{ display: 'block', color: 'var(--white)', fontSize: '0.9rem' }}>Location</strong>
-                    Greater Toronto Area, Ontario
+                    {resumeData.profile.location}
                   </div>
                 </li>
               </ul>
