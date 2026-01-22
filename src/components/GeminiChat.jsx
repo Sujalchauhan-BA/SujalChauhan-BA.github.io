@@ -4,6 +4,8 @@ import { resumeData } from '../resumeData';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
 import './GeminiChat.css';
 
+const RESUME_DATA_STRING = JSON.stringify(resumeData);
+
 const GeminiChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -49,7 +51,7 @@ const GeminiChat = () => {
       const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
 
       Resume Data:
-      ${JSON.stringify(resumeData)}
+      ${RESUME_DATA_STRING}
       `;
 
       // Use systemInstruction for better context handling
