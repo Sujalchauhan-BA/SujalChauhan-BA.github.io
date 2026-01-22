@@ -222,17 +222,12 @@ function App() {
                 </p>
               </div>
               <div className="project-stats">
-                {project.metrics.map((metric, i) => {
-                  const parts = metric.split(' ');
-                  const value = parts[0];
-                  const label = parts.slice(1).join(' ');
-                  return (
-                    <div key={i} className="metric">
-                      <strong>{value}</strong>
-                      <span>{label}</span>
-                    </div>
-                  );
-                })}
+                {project.metrics.map((metric, i) => (
+                  <div key={i} className="metric">
+                    <strong>{metric.value}</strong>
+                    <span>{metric.label}</span>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
