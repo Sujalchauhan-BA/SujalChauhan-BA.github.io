@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '../resumeData';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
 import './GeminiChat.css';
+
+const RESUME_DATA_STRING = JSON.stringify(resumeData);
 
 const GeminiChat = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +33,24 @@ const GeminiChat = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
+  const model = useMemo(() => {
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!apiKey) return null;
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+
+    const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
+
+      Resume Data:
+      ${RESUME_DATA_STRING}
+      `;
+
+    return genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: systemPrompt
+    });
+  }, []);
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -48,18 +68,17 @@ const GeminiChat = () => {
       // Initialize chat session if it doesn't exist
       if (!chatSessionRef.current) {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({
+        const chatModel = genAI.getGenerativeModel({
             model: "gemini-1.5-flash"
-            // Removed systemInstruction to ensure broader compatibility
         });
 
         const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
 
         Resume Data:
-        ${JSON.stringify(resumeData)}
+        ${RESUME_DATA_STRING}
         `;
 
-        chatSessionRef.current = model.startChat({
+        chatSessionRef.current = chatModel.startChat({
           history: [
             {
                 role: "user",
@@ -89,13 +108,10 @@ const GeminiChat = () => {
       } else if (error.message.includes("429")) {
           errorMessage = "Service Busy: Too many requests. Please try again in a moment.";
       } else {
-          // Surface more details for unknown errors to help debugging, but keep it user-friendly-ish
           errorMessage = `Connection Error: ${error.message || "Unknown error"}`;
       }
 
       setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
-
-      // If the session crashed (e.g. invalid state), reset it so the user can try again cleanly
       chatSessionRef.current = null;
     } finally {
       setIsLoading(false);

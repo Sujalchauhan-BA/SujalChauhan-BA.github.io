@@ -44,35 +44,50 @@ export const resumeData = {
       category: "Fintech / Cloud",
       challenge: "A banking unit faced 3-5 day customer onboarding cycles due to manual paper checks and siloed legacy infrastructure, creating high regulatory risk.",
       solution: "Spearheaded technical requirements for migrating 12 apps to Azure. Designed an event-driven Logic Apps workflow to automate document verification, routing only exceptions to humans.",
-      metrics: ["-45% Verification Time", "99.9% System Uptime"]
+      metrics: [
+        { value: "-45%", label: "Verification Time" },
+        { value: "99.9%", label: "System Uptime" }
+      ]
     },
     {
       title: "B2C Platform Digital Transformation",
       category: "E-Commerce / Logistics",
       challenge: "The client lost revenue by bulk-selling IT assets. They lacked a direct-to-consumer channel to maximize recovery value from secondary markets.",
       solution: "Led functional design for a bespoke resale platform integrated with Dynamics 365. Defined API specs for real-time inventory sync and order management.",
-      metrics: ["+25% Secondary Revenue", "30% Forecast Accuracy"]
+      metrics: [
+        { value: "+25%", label: "Secondary Revenue" },
+        { value: "30%", label: "Forecast Accuracy" }
+      ]
     },
     {
       title: "Dynamics 365 & CRM Integration",
       category: "CRM / Enterprise Systems",
       challenge: "Disconnected sales and production systems led to data discrepancies, inventory errors, and missed sales opportunities across the enterprise.",
       solution: "Managed gap analysis and data mapping for a full Dynamics 365 integration. Facilitated JAD sessions to align Business Development and Production workflows.",
-      metrics: ["100% Data Integrity", "Real-time Inventory Sync"]
+      metrics: [
+        { value: "100%", label: "Data Integrity" },
+        { value: "Real-time", label: "Inventory Sync" }
+      ]
     },
     {
       title: "Global Market Expansion & Interconnection",
       category: "Telecom / International",
       challenge: "Expanding voice/data services into new international markets was stalled by complex regulatory hurdles and undefined technical requirements.",
       solution: "Conducted feasibility studies and negotiated bilateral agreements. Mapped \"To-Be\" deployment workflows to ensure technical and commercial compliance.",
-      metrics: ["$MM Deal Value", "10+ New Markets"]
+      metrics: [
+        { value: "$MM", label: "Deal Value" },
+        { value: "10+", label: "New Markets" }
+      ]
     },
     {
       title: "Call Center Workflow Optimization",
       category: "Support Operations",
       challenge: "High average handle time (AHT) and inconsistent agent knowledge led to low First Contact Resolution (FCR) rates for a major tech client.",
       solution: "Created a centralized Knowledge Base and standardized SOPs. Analyzed call data to optimize shift scheduling and agent training modules.",
-      metrics: ["+15% FCR Rate", "-20% Resolution Time"]
+      metrics: [
+        { value: "+15%", label: "FCR Rate" },
+        { value: "-20%", label: "Resolution Time" }
+      ]
     }
   ],
   experience: [
