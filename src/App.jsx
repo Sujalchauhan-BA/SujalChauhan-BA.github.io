@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import GeminiChat from './components/GeminiChat';
 import MarketRatesWidget from './components/MarketRatesWidget';
+import WeatherWidget from './components/WeatherWidget';
 import { resumeData } from './resumeData';
 
 function App() {
@@ -388,6 +389,7 @@ function App() {
         </div>
       )}
 
+      <WeatherWidget />
       <MarketRatesWidget />
       <GeminiChat />
     </div>

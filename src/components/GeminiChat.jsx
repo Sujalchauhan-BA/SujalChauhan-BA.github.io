@@ -13,6 +13,7 @@ const GeminiChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const chatSessionRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -44,25 +45,35 @@ const GeminiChat = () => {
         throw new Error("API Key missing. Please set VITE_GEMINI_API_KEY in your environment.");
       }
 
-      const genAI = new GoogleGenerativeAI(apiKey);
+      // Initialize chat session if it doesn't exist
+      if (!chatSessionRef.current) {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash"
+            // Removed systemInstruction to ensure broader compatibility
+        });
 
-      const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
+        const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
 
-      Resume Data:
-      ${JSON.stringify(resumeData)}
-      `;
+        Resume Data:
+        ${JSON.stringify(resumeData)}
+        `;
 
-      // Use systemInstruction for better context handling
-      const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
-        systemInstruction: systemPrompt
-      });
+        chatSessionRef.current = model.startChat({
+          history: [
+            {
+                role: "user",
+                parts: [{ text: systemPrompt }]
+            },
+            {
+                role: "model",
+                parts: [{ text: "Understood. I am ready to answer questions about Sujal Chauhan." }]
+            }
+          ],
+        });
+      }
 
-      const chat = model.startChat({
-        history: [], // History management can be improved by appending previous session messages if needed, but keeping it simple for now to avoid context limit issues with large history + system prompt redundancy.
-      });
-
-      const result = await chat.sendMessage(input);
+      const result = await chatSessionRef.current.sendMessage(input);
       const response = await result.response;
       const text = response.text();
 
@@ -77,9 +88,15 @@ const GeminiChat = () => {
           errorMessage = "Access Error: The API key is invalid or has expired.";
       } else if (error.message.includes("429")) {
           errorMessage = "Service Busy: Too many requests. Please try again in a moment.";
+      } else {
+          // Surface more details for unknown errors to help debugging, but keep it user-friendly-ish
+          errorMessage = `Connection Error: ${error.message || "Unknown error"}`;
       }
 
       setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
+
+      // If the session crashed (e.g. invalid state), reset it so the user can try again cleanly
+      chatSessionRef.current = null;
     } finally {
       setIsLoading(false);
     }
