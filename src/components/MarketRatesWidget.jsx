@@ -13,10 +13,6 @@ const MarketRatesWidget = () => {
         // Fetch Fiat
         const fiatReq = fetch('https://api.frankfurter.app/latest?amount=1&from=CAD&to=USD,INR,GBP');
         // Fetch Crypto
-        const cryptoReq = fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=cad'); // Using CAD to match base? Or USD? User asked for "live Bitcoin... prices". Usually crypto is USD, but base is CAD. Let's do USD as it's standard, or CAD to match the "1 CAD =" theme. The prompt says "alongside the currency rates". The currency rates are 1 CAD = X.
-        // Let's stick to USD for Crypto as it's the global standard, but maybe label it.
-        // Actually, user said "fetch live Bitcoin... prices alongside the currency rates".
-        // Let's fetch USD for crypto.
         const cryptoReqUSD = fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
 
         const [fiatRes, cryptoRes] = await Promise.all([fiatReq, cryptoReqUSD]);
