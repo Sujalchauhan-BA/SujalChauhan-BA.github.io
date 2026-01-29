@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '../resumeData';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
@@ -32,6 +32,25 @@ const GeminiChat = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
+  const model = useMemo(() => {
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!apiKey) return null;
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+
+    const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
+
+      Resume Data:
+      ${RESUME_DATA_STRING}
+      `;
+
+    // Use systemInstruction for better context handling
+    return genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: systemPrompt
+    });
+  }, []);
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -41,24 +60,9 @@ const GeminiChat = () => {
     setIsLoading(true);
 
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
+      if (!model) {
         throw new Error("API Key missing. Please set VITE_GEMINI_API_KEY in your environment.");
       }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-
-      const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
-
-      Resume Data:
-      ${RESUME_DATA_STRING}
-      `;
-
-      // Use systemInstruction for better context handling
-      const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
-        systemInstruction: systemPrompt
-      });
 
       const chat = model.startChat({
         history: [], // History management can be improved by appending previous session messages if needed, but keeping it simple for now to avoid context limit issues with large history + system prompt redundancy.
