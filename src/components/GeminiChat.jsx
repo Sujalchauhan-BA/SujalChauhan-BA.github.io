@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '../resumeData';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
@@ -8,13 +8,22 @@ const RESUME_DATA_STRING = JSON.stringify(resumeData);
 
 const GeminiChat = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'model', text: "Hello! I'm Sujal's AI Assistant. Ask me anything about his experience, skills, or projects." }
-  ]);
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem('gemini_chat_history');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse chat history", e);
+      }
+    }
+    return [{ role: 'model', text: "Hello! I'm Sujal's AI Assistant. Ask me anything about his experience, skills, or projects." }];
+  });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const chatSessionRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,24 +41,9 @@ const GeminiChat = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
-  const model = useMemo(() => {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    if (!apiKey) return null;
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-
-    const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
-
-      Resume Data:
-      ${RESUME_DATA_STRING}
-      `;
-
-    // Use systemInstruction for better context handling
-    return genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      systemInstruction: systemPrompt
-    });
-  }, []);
+  useEffect(() => {
+    localStorage.setItem('gemini_chat_history', JSON.stringify(messages));
+  }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -60,15 +54,56 @@ const GeminiChat = () => {
     setIsLoading(true);
 
     try {
-      if (!model) {
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!apiKey) {
         throw new Error("API Key missing. Please set VITE_GEMINI_API_KEY in your environment.");
       }
 
-      const chat = model.startChat({
-        history: [], // History management can be improved by appending previous session messages if needed, but keeping it simple for now to avoid context limit issues with large history + system prompt redundancy.
-      });
+      // Initialize chat session if it doesn't exist
+      if (!chatSessionRef.current) {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const chatModel = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash"
+        });
 
-      const result = await chat.sendMessage(input);
+        const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
+
+        Resume Data:
+        ${RESUME_DATA_STRING}
+        `;
+
+        // Prepare history from stored messages
+        // Limit to last 15 messages to avoid context limits
+        const HISTORY_LIMIT = 15;
+        let historyMessages = messages.slice(-HISTORY_LIMIT);
+
+        // If the first message is the default model greeting, skip it to avoid Model->Model sequence
+        // (Since we append to [System(User), Ack(Model)])
+        if (historyMessages.length > 0 && historyMessages[0].role === 'model') {
+           historyMessages = historyMessages.slice(1);
+        }
+
+        const validHistory = historyMessages.map(msg => ({
+            role: msg.role,
+            parts: [{ text: msg.text }]
+        }));
+
+        chatSessionRef.current = chatModel.startChat({
+          history: [
+            {
+                role: "user",
+                parts: [{ text: systemPrompt }]
+            },
+            {
+                role: "model",
+                parts: [{ text: "Understood. I am ready to answer questions about Sujal Chauhan." }]
+            },
+            ...validHistory
+          ],
+        });
+      }
+
+      const result = await chatSessionRef.current.sendMessage(input);
       const response = await result.response;
       const text = response.text();
 
@@ -83,9 +118,12 @@ const GeminiChat = () => {
           errorMessage = "Access Error: The API key is invalid or has expired.";
       } else if (error.message.includes("429")) {
           errorMessage = "Service Busy: Too many requests. Please try again in a moment.";
+      } else {
+          errorMessage = `Connection Error: ${error.message || "Unknown error"}`;
       }
 
       setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
+      chatSessionRef.current = null;
     } finally {
       setIsLoading(false);
     }

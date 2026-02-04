@@ -66,9 +66,13 @@ describe('GeminiChat Performance', () => {
     fireEvent.change(input, { target: { value: 'Second message' } });
     fireEvent.click(sendBtn);
 
+    // verify startChat was NOT called again (session reused)
     await waitFor(() => {
-      expect(mockStartChat).toHaveBeenCalledTimes(2);
+      expect(mockStartChat).toHaveBeenCalledTimes(1);
     });
+
+    // Verify sendMessage calls (should be 2)
+    expect(mockSendMessage).toHaveBeenCalledTimes(2);
 
     // Verify constructor calls
     // With optimization, it should be called only 1 time (during initial render/memo).
