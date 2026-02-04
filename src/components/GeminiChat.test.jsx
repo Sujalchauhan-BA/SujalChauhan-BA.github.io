@@ -66,12 +66,13 @@ describe('GeminiChat Performance', () => {
     fireEvent.change(input, { target: { value: 'Second message' } });
     fireEvent.click(sendBtn);
 
+    // Should still be 1 because session is persisted in ref
     await waitFor(() => {
-      expect(mockStartChat).toHaveBeenCalledTimes(2);
+      expect(mockStartChat).toHaveBeenCalledTimes(1);
     });
 
     // Verify constructor calls
-    // With optimization, it should be called only 1 time (during initial render/memo).
+    // With optimization, it should be called only 1 time.
     expect(GoogleGenerativeAI).toHaveBeenCalledTimes(1);
   });
 });
