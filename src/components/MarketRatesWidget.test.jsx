@@ -5,9 +5,25 @@ import { vi, describe, test, expect, beforeEach } from 'vitest';
 // Mock fetch
 window.fetch = vi.fn();
 
+// Mock IntersectionObserver
+const observeMock = vi.fn();
+const disconnectMock = vi.fn();
+let intersectCallback = null;
+
+window.IntersectionObserver = class {
+  constructor(cb) {
+    intersectCallback = cb;
+  }
+  observe = observeMock;
+  disconnect = disconnectMock;
+};
+
 describe('MarketRatesWidget', () => {
   beforeEach(() => {
     window.fetch.mockClear();
+    observeMock.mockClear();
+    disconnectMock.mockClear();
+    intersectCallback = null;
   });
 
   test('fetches data and renders correctly (baseline check)', async () => {
@@ -35,6 +51,11 @@ describe('MarketRatesWidget', () => {
     });
 
     render(<MarketRatesWidget />);
+
+    // Trigger intersection
+    if (intersectCallback) {
+      intersectCallback([{ isIntersecting: true }]);
+    }
 
     // Wait for data to load
     await waitFor(() => {
