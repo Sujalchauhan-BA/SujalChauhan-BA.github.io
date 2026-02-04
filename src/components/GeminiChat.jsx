@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '../resumeData';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
@@ -32,24 +32,6 @@ const GeminiChat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isOpen]);
-
-  const model = useMemo(() => {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    if (!apiKey) return null;
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-
-    const systemPrompt = `You are an AI assistant for Sujal Chauhan. Answer recruiter questions using his resume data provided below. Be professional and concise.
-
-      Resume Data:
-      ${RESUME_DATA_STRING}
-      `;
-
-    return genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      systemInstruction: systemPrompt
-    });
-  }, []);
 
   const handleSend = async () => {
     if (!input.trim()) return;

@@ -67,7 +67,7 @@ describe('GeminiChat Performance', () => {
     fireEvent.click(sendBtn);
 
     await waitFor(() => {
-      expect(mockStartChat).toHaveBeenCalledTimes(2);
+      expect(mockStartChat).toHaveBeenCalledTimes(1);
     });
 
     // Verify constructor calls
