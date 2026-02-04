@@ -210,8 +210,8 @@ function App() {
             <div style={{ width: '50px', height: '3px', background: 'var(--accent)', margin: '20px auto 60px' }}></div>
           </div>
 
-          {resumeData.projects.map((project, index) => (
-            <div key={index} className="project-card">
+          {resumeData.projects.map((project) => (
+            <div key={project.title} className="project-card">
               <div className="project-content">
                 <span className="project-meta">{project.category}</span>
                 <h3>{project.title}</h3>
