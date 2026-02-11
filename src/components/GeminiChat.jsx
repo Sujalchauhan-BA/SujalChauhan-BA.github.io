@@ -8,9 +8,17 @@ const RESUME_DATA_STRING = JSON.stringify(resumeData);
 
 const GeminiChat = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'model', text: "Hello! I'm Sujal's AI Assistant. Ask me anything about his experience, skills, or projects." }
-  ]);
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem('gemini_chat_history');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse chat history", e);
+      }
+    }
+    return [{ role: 'model', text: "Hello! I'm Sujal's AI Assistant. Ask me anything about his experience, skills, or projects." }];
+  });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
@@ -60,6 +68,22 @@ const GeminiChat = () => {
         ${RESUME_DATA_STRING}
         `;
 
+        // Prepare history from stored messages
+        // Limit to last 15 messages to avoid context limits
+        const HISTORY_LIMIT = 15;
+        let historyMessages = messages.slice(-HISTORY_LIMIT);
+
+        // If the first message is the default model greeting, skip it to avoid Model->Model sequence
+        // (Since we append to [System(User), Ack(Model)])
+        if (historyMessages.length > 0 && historyMessages[0].role === 'model') {
+           historyMessages = historyMessages.slice(1);
+        }
+
+        const validHistory = historyMessages.map(msg => ({
+            role: msg.role,
+            parts: [{ text: msg.text }]
+        }));
+
         chatSessionRef.current = chatModel.startChat({
           history: [
             {
@@ -69,7 +93,8 @@ const GeminiChat = () => {
             {
                 role: "model",
                 parts: [{ text: "Understood. I am ready to answer questions about Sujal Chauhan." }]
-            }
+            },
+            ...validHistory
           ],
         });
       }
