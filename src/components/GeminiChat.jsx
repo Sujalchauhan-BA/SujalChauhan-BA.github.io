@@ -41,10 +41,6 @@ const GeminiChat = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
-  useEffect(() => {
-    localStorage.setItem('gemini_chat_history', JSON.stringify(messages));
-  }, [messages]);
-
   const handleSend = async () => {
     if (!input.trim()) return;
 
