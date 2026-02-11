@@ -1,22 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Activity } from 'lucide-react';
 
 const MarketRatesWidget = () => {
   const [fiatRates, setFiatRates] = useState({ USD: '---', INR: '---', GBP: '---' });
   const [cryptoRates, setCryptoRates] = useState({ bitcoin: '---', ethereum: '---', solana: '---' });
   const [status, setStatus] = useState('Initializing...');
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef(null);
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
     const fetchData = async () => {
       setStatus("Fetching data...");
       try {
         // Fetch Fiat
         const fiatReq = fetch('https://api.frankfurter.app/latest?amount=1&from=CAD&to=USD,INR,GBP');
         // Fetch Crypto
-        const cryptoReq = fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=cad'); // Using CAD to match base? Or USD? User asked for "live Bitcoin... prices". Usually crypto is USD, but base is CAD. Let's do USD as it's standard, or CAD to match the "1 CAD =" theme. The prompt says "alongside the currency rates". The currency rates are 1 CAD = X.
-        // Let's stick to USD for Crypto as it's the global standard, but maybe label it.
-        // Actually, user said "fetch live Bitcoin... prices alongside the currency rates".
-        // Let's fetch USD for crypto.
         const cryptoReqUSD = fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
 
         const [fiatRes, cryptoRes] = await Promise.all([fiatReq, cryptoReqUSD]);
@@ -51,10 +66,10 @@ const MarketRatesWidget = () => {
     // Refresh every 60s
     const interval = setInterval(fetchData, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isVisible]);
 
   return (
-    <div className="market-card">
+    <div className="market-card" ref={containerRef}>
       <div className="market-header">
         <span className="market-title"> <Activity size={16} style={{marginRight: '8px', verticalAlign: 'text-bottom'}}/> Live Markets</span>
         <span className="market-status" style={{ color: status.includes("⚠️") ? 'red' : '#888' }}>{status}</span>

@@ -75,7 +75,7 @@ describe('GeminiChat Performance', () => {
     expect(mockSendMessage).toHaveBeenCalledTimes(2);
 
     // Verify constructor calls
-    // With optimization, it should be called only 1 time (during initial render/memo).
+    // With optimization, it should be called only 1 time.
     expect(GoogleGenerativeAI).toHaveBeenCalledTimes(1);
   });
 });
