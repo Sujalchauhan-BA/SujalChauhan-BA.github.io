@@ -55,13 +55,13 @@ const GeminiChat = () => {
 
     try {
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
+      if (!apiKey || !apiKey.trim()) {
         throw new Error("API Key missing. Please set VITE_GEMINI_API_KEY in your environment.");
       }
 
       // Initialize chat session if it doesn't exist
       if (!chatSessionRef.current) {
-        const genAI = new GoogleGenerativeAI(apiKey);
+        const genAI = new GoogleGenerativeAI(apiKey.trim());
         const chatModel = genAI.getGenerativeModel({
             model: "gemini-1.5-flash"
         });
