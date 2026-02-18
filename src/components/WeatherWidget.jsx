@@ -1,11 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Cloud, Sun, CloudRain, CloudSnow, CloudFog, CloudLightning } from 'lucide-react';
 
 const WeatherWidget = () => {
   const [weather, setWeather] = useState({ temp: '--', condition: 'Loading...', code: null });
   const [loading, setLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef(null);
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
     const fetchWeather = async () => {
       try {
         const response = await fetch(
@@ -31,7 +50,7 @@ const WeatherWidget = () => {
     // Refresh every 30 minutes
     const interval = setInterval(fetchWeather, 30 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isVisible]);
 
   const getWeatherIcon = (code) => {
     if (code === null) return <Cloud size={32} color="#888" />;
@@ -57,7 +76,7 @@ const WeatherWidget = () => {
   };
 
   return (
-    <div className="market-card" style={{ marginBottom: '20px', marginTop: '0' }}>
+    <div className="market-card" ref={containerRef} style={{ marginBottom: '20px', marginTop: '0' }}>
       <div className="market-header">
         <span className="market-title">
             <Cloud size={16} style={{marginRight: '8px', verticalAlign: 'text-bottom'}}/>
