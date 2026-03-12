@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '../resumeData';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
@@ -41,7 +41,7 @@ const GeminiChat = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     if (!input.trim()) return;
 
     const userMessage = { role: 'user', text: input };
@@ -123,7 +123,7 @@ const GeminiChat = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, messages]);
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
