@@ -3,7 +3,7 @@ import { Cloud, Sun, CloudRain, CloudSnow, CloudFog, CloudLightning } from 'luci
 
 const WeatherWidget = () => {
   const [weather, setWeather] = useState({ temp: '--', condition: 'Loading...', code: null });
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef(null);
 
