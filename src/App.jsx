@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import GeminiChat from './components/GeminiChat';
 import MarketRatesWidget from './components/MarketRatesWidget';
+import ProjectCard from './components/ProjectCard';
 import WeatherWidget from './components/WeatherWidget';
 import { resumeData } from './resumeData';
 
@@ -211,26 +212,7 @@ function App() {
           </div>
 
           {resumeData.projects.map((project) => (
-            <div key={project.title} className="project-card">
-              <div className="project-content">
-                <span className="project-meta">{project.category}</span>
-                <h3>{project.title}</h3>
-                <p style={{ color: '#cbd5e1', margin: '20px 0' }}>
-                  <strong>Challenge:</strong> {project.challenge}
-                </p>
-                <p style={{ color: 'var(--text-gray)' }}>
-                  <strong>Solution:</strong> {project.solution}
-                </p>
-              </div>
-              <div className="project-stats">
-                {project.metrics.map((metric, i) => (
-                  <div key={i} className="metric">
-                    <strong>{metric.value}</strong>
-                    <span>{metric.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ProjectCard key={project.title} project={project} />
           ))}
 
         </div>
