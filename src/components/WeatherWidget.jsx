@@ -3,7 +3,6 @@ import { Cloud, Sun, CloudRain, CloudSnow, CloudFog, CloudLightning } from 'luci
 
 const WeatherWidget = () => {
   const [weather, setWeather] = useState({ temp: '--', condition: 'Loading...', code: null });
-  const [loading, setLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef(null);
 
@@ -25,10 +24,13 @@ const WeatherWidget = () => {
   useEffect(() => {
     if (!isVisible) return;
 
+    const controller = new AbortController();
+
     const fetchWeather = async () => {
       try {
         const response = await fetch(
-          'https://api.open-meteo.com/v1/forecast?latitude=43.70&longitude=-79.42&current=temperature_2m,weather_code&timezone=America%2FToronto'
+          'https://api.open-meteo.com/v1/forecast?latitude=43.70&longitude=-79.42&current=temperature_2m,weather_code&timezone=America%2FToronto',
+          { signal: controller.signal }
         );
         const data = await response.json();
 
@@ -39,17 +41,19 @@ const WeatherWidget = () => {
           });
         }
       } catch (error) {
+        if (error.name === 'AbortError') return;
         console.error("Weather data fetch error:", error);
         setWeather(prev => ({ ...prev, condition: 'Unavailable' }));
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchWeather();
     // Refresh every 30 minutes
     const interval = setInterval(fetchWeather, 30 * 60 * 1000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      controller.abort();
+    };
   }, [isVisible]);
 
   const getWeatherIcon = (code) => {
@@ -102,7 +106,7 @@ const WeatherWidget = () => {
                 {weather.temp}°C
             </div>
             <div style={{ fontSize: '1rem', color: '#666', marginTop: '5px' }}>
-                {getWeatherLabel(weather.code)}
+                {weather.code === null ? weather.condition : getWeatherLabel(weather.code)}
             </div>
         </div>
 
