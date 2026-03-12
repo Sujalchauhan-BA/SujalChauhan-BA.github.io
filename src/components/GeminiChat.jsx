@@ -71,13 +71,15 @@ const GeminiChat = () => {
         // Prepare history from stored messages
         // Limit to last 15 messages to avoid context limits
         const HISTORY_LIMIT = 15;
-        let historyMessages = messages.slice(-HISTORY_LIMIT);
+        let startIndex = Math.max(0, messages.length - HISTORY_LIMIT);
 
         // If the first message is the default model greeting, skip it to avoid Model->Model sequence
         // (Since we append to [System(User), Ack(Model)])
-        if (historyMessages.length > 0 && historyMessages[0].role === 'model') {
-           historyMessages = historyMessages.slice(1);
+        if (messages.length > startIndex && messages[startIndex].role === 'model') {
+           startIndex++;
         }
+
+        const historyMessages = messages.slice(startIndex);
 
         const validHistory = historyMessages.map(msg => ({
             role: msg.role,
