@@ -1,6 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
 import { Cloud, Sun, CloudRain, CloudSnow, CloudFog, CloudLightning } from 'lucide-react';
 
+const getWeatherIcon = (code) => {
+  if (code === null) return <Cloud size={32} color="#888" />;
+  if (code === 0) return <Sun size={32} color="#f59e0b" />;
+  if (code >= 1 && code <= 3) return <Cloud size={32} color="#64748b" />;
+  if (code >= 45 && code <= 48) return <CloudFog size={32} color="#94a3b8" />;
+  if (code >= 51 && code <= 67) return <CloudRain size={32} color="#3b82f6" />;
+  if (code >= 71 && code <= 77) return <CloudSnow size={32} color="#cbd5e1" />;
+  if (code >= 80 && code <= 82) return <CloudRain size={32} color="#3b82f6" />;
+  if (code >= 95) return <CloudLightning size={32} color="#eab308" />;
+  return <Cloud size={32} color="#64748b" />;
+};
+
+const getWeatherLabel = (code) => {
+  if (code === null) return '--';
+  if (code === 0) return 'Clear Sky';
+  if (code >= 1 && code <= 3) return 'Partly Cloudy';
+  if (code >= 45 && code <= 48) return 'Foggy';
+  if (code >= 51 && code <= 67) return 'Rainy';
+  if (code >= 71 && code <= 77) return 'Snowy';
+  if (code >= 95) return 'Stormy';
+  return 'Cloudy';
+};
+
 const WeatherWidget = () => {
   const [weather, setWeather] = useState({ temp: '--', condition: 'Loading...', code: null });
   const [loading, setLoading] = useState(true);
@@ -51,29 +74,6 @@ const WeatherWidget = () => {
     const interval = setInterval(fetchWeather, 30 * 60 * 1000);
     return () => clearInterval(interval);
   }, [isVisible]);
-
-  const getWeatherIcon = (code) => {
-    if (code === null) return <Cloud size={32} color="#888" />;
-    if (code === 0) return <Sun size={32} color="#f59e0b" />;
-    if (code >= 1 && code <= 3) return <Cloud size={32} color="#64748b" />;
-    if (code >= 45 && code <= 48) return <CloudFog size={32} color="#94a3b8" />;
-    if (code >= 51 && code <= 67) return <CloudRain size={32} color="#3b82f6" />;
-    if (code >= 71 && code <= 77) return <CloudSnow size={32} color="#cbd5e1" />;
-    if (code >= 80 && code <= 82) return <CloudRain size={32} color="#3b82f6" />;
-    if (code >= 95) return <CloudLightning size={32} color="#eab308" />;
-    return <Cloud size={32} color="#64748b" />;
-  };
-
-  const getWeatherLabel = (code) => {
-    if (code === null) return '--';
-    if (code === 0) return 'Clear Sky';
-    if (code >= 1 && code <= 3) return 'Partly Cloudy';
-    if (code >= 45 && code <= 48) return 'Foggy';
-    if (code >= 51 && code <= 67) return 'Rainy';
-    if (code >= 71 && code <= 77) return 'Snowy';
-    if (code >= 95) return 'Stormy';
-    return 'Cloudy';
-  };
 
   return (
     <div className="market-card" ref={containerRef} style={{ marginBottom: '20px', marginTop: '0' }}>
