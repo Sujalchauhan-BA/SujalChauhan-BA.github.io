@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '../resumeData';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
@@ -41,6 +41,20 @@ const GeminiChat = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
+  const validHistory = useMemo(() => {
+    const HISTORY_LIMIT = 15;
+    let historyMessages = messages.slice(-HISTORY_LIMIT);
+
+    if (historyMessages.length > 0 && historyMessages[0].role === 'model') {
+      historyMessages = historyMessages.slice(1);
+    }
+
+    return historyMessages.map(msg => ({
+      role: msg.role,
+      parts: [{ text: msg.text }]
+    }));
+  }, [messages]);
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -67,22 +81,6 @@ const GeminiChat = () => {
         Resume Data:
         ${RESUME_DATA_STRING}
         `;
-
-        // Prepare history from stored messages
-        // Limit to last 15 messages to avoid context limits
-        const HISTORY_LIMIT = 15;
-        let historyMessages = messages.slice(-HISTORY_LIMIT);
-
-        // If the first message is the default model greeting, skip it to avoid Model->Model sequence
-        // (Since we append to [System(User), Ack(Model)])
-        if (historyMessages.length > 0 && historyMessages[0].role === 'model') {
-           historyMessages = historyMessages.slice(1);
-        }
-
-        const validHistory = historyMessages.map(msg => ({
-            role: msg.role,
-            parts: [{ text: msg.text }]
-        }));
 
         chatSessionRef.current = chatModel.startChat({
           history: [
