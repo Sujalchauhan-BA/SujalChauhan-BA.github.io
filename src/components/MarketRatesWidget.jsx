@@ -26,13 +26,16 @@ const MarketRatesWidget = () => {
   useEffect(() => {
     if (!isVisible) return;
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const fetchData = async () => {
       setStatus("Fetching data...");
       try {
         // Fetch Fiat
-        const fiatReq = fetch('https://api.frankfurter.app/latest?amount=1&from=CAD&to=USD,INR,GBP');
+        const fiatReq = fetch('https://api.frankfurter.app/latest?amount=1&from=CAD&to=USD,INR,GBP', { signal });
         // Fetch Crypto
-        const cryptoReqUSD = fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
+        const cryptoReqUSD = fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd', { signal });
 
         const [fiatRes, cryptoRes] = await Promise.all([fiatReq, cryptoReqUSD]);
 
@@ -57,6 +60,10 @@ const MarketRatesWidget = () => {
         setStatus("Live Market Data");
 
       } catch (error) {
+        if (error.name === 'AbortError') {
+          console.log('Fetch aborted');
+          return;
+        }
         console.error("Market Data Error:", error);
         setStatus("⚠️ Partial Data");
       }
@@ -65,7 +72,10 @@ const MarketRatesWidget = () => {
     fetchData();
     // Refresh every 60s
     const interval = setInterval(fetchData, 60000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      controller.abort();
+    };
   }, [isVisible]);
 
   return (
