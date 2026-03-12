@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '../resumeData';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
 import './GeminiChat.css';
@@ -57,6 +56,7 @@ const GeminiChat = () => {
 
       // Initialize chat session if it doesn't exist
       if (!chatSessionRef.current) {
+        const { GoogleGenerativeAI } = await import('@google/generative-ai');
         const genAI = new GoogleGenerativeAI(apiKey);
         const chatModel = genAI.getGenerativeModel({
             model: "gemini-1.5-flash"
