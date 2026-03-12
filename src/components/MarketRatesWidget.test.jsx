@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import MarketRatesWidget from './MarketRatesWidget';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
 
@@ -53,9 +53,11 @@ describe('MarketRatesWidget', () => {
     render(<MarketRatesWidget />);
 
     // Trigger intersection
-    if (intersectCallback) {
-      intersectCallback([{ isIntersecting: true }]);
-    }
+    act(() => {
+      if (intersectCallback) {
+        intersectCallback([{ isIntersecting: true }]);
+      }
+    });
 
     // Wait for data to load
     await waitFor(() => {
@@ -66,7 +68,7 @@ describe('MarketRatesWidget', () => {
     expect(fetch).toHaveBeenCalledTimes(2);
 
     // Verify specific calls were made
-    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('frankfurter'));
-    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('vs_currencies=usd'));
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('frankfurter'), expect.any(Object));
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('vs_currencies=usd'), expect.any(Object));
   });
 });
