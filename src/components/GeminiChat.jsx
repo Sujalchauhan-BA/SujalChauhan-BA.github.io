@@ -44,7 +44,11 @@ const GeminiChat = () => {
     if (!input.trim()) return;
 
     const userMessage = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => {
+      const newMessages = [...prev, userMessage];
+      localStorage.setItem('gemini_chat_history', JSON.stringify(newMessages));
+      return newMessages;
+    });
     setInput('');
     setIsLoading(true);
 
@@ -105,7 +109,11 @@ const GeminiChat = () => {
       const response = await result.response;
       const text = response.text();
 
-      setMessages(prev => [...prev, { role: 'model', text }]);
+      setMessages(prev => {
+        const newMessages = [...prev, { role: 'model', text }];
+        localStorage.setItem('gemini_chat_history', JSON.stringify(newMessages));
+        return newMessages;
+      });
     } catch (error) {
       console.error("Gemini Error:", error);
       let errorMessage = "I'm having trouble connecting right now. Please try again later.";

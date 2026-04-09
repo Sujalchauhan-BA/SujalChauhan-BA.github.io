@@ -51,8 +51,22 @@ describe('WeatherWidget Functional', () => {
     });
   });
 
-  test('renders location correctly', () => {
+  test('renders location correctly', async () => {
+    window.fetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({
+        current: {
+          temperature_2m: 22.4,
+          weather_code: 0
+        }
+      })
+    });
     render(<WeatherWidget />);
     expect(screen.getByText('Toronto, ON')).toBeInTheDocument();
+
+    // Wait for state updates to settle to avoid act() warning
+    await waitFor(() => {
+      expect(screen.getByText('22°C')).toBeInTheDocument();
+    });
   });
 });

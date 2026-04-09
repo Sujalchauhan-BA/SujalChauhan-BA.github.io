@@ -2,8 +2,24 @@ import { useState, useEffect, useRef } from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Activity } from 'lucide-react';
 
 const MarketRatesWidget = () => {
-  const [fiatRates, setFiatRates] = useState({ USD: '---', INR: '---', GBP: '---' });
-  const [cryptoRates, setCryptoRates] = useState({ bitcoin: '---', ethereum: '---', solana: '---' });
+  const [fiatRates, setFiatRates] = useState(() => {
+    try {
+      const cached = localStorage.getItem('market_rates_fiat');
+      if (cached) return JSON.parse(cached);
+    } catch (e) {
+      console.error("Error reading fiat cache", e);
+    }
+    return { USD: '---', INR: '---', GBP: '---' };
+  });
+  const [cryptoRates, setCryptoRates] = useState(() => {
+    try {
+      const cached = localStorage.getItem('market_rates_crypto');
+      if (cached) return JSON.parse(cached);
+    } catch (e) {
+      console.error("Error reading crypto cache", e);
+    }
+    return { bitcoin: '---', ethereum: '---', solana: '---' };
+  });
   const [status, setStatus] = useState('Initializing...');
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef(null);
@@ -41,20 +57,32 @@ const MarketRatesWidget = () => {
 
         if (fiatRes.ok) {
             const fiatData = await fiatRes.json();
-            setFiatRates({
+            const newFiatRates = {
                 USD: '$' + fiatData.rates.USD.toFixed(3),
                 INR: '₹' + fiatData.rates.INR.toFixed(2),
                 GBP: '£' + fiatData.rates.GBP.toFixed(3)
-            });
+            };
+            setFiatRates(newFiatRates);
+            try {
+                localStorage.setItem('market_rates_fiat', JSON.stringify(newFiatRates));
+            } catch (e) {
+                console.error("Error saving fiat cache", e);
+            }
         }
 
         if (cryptoRes.ok) {
             const cryptoData = await cryptoRes.json();
-            setCryptoRates({
+            const newCryptoRates = {
                 bitcoin: '$' + cryptoData.bitcoin.usd.toLocaleString(),
                 ethereum: '$' + cryptoData.ethereum.usd.toLocaleString(),
                 solana: '$' + cryptoData.solana.usd.toLocaleString()
-            });
+            };
+            setCryptoRates(newCryptoRates);
+            try {
+                localStorage.setItem('market_rates_crypto', JSON.stringify(newCryptoRates));
+            } catch (e) {
+                console.error("Error saving crypto cache", e);
+            }
         }
 
         setStatus("Live Market Data");
