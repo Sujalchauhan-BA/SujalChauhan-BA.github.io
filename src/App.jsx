@@ -223,8 +223,8 @@ function App() {
                 </p>
               </div>
               <div className="project-stats">
-                {project.metrics.map((metric, i) => (
-                  <div key={i} className="metric">
+                {project.metrics.map((metric) => (
+                  <div key={metric.label} className="metric">
                     <strong>{metric.value}</strong>
                     <span>{metric.label}</span>
                   </div>
@@ -245,8 +245,8 @@ function App() {
           </div>
 
           <div className="timeline-wrapper">
-            {resumeData.experience.map((exp, index) => (
-              <div key={index} className="timeline-item">
+            {resumeData.experience.map((exp) => (
+              <div key={`${exp.company}-${exp.role}`} className="timeline-item">
                 <div className="role-header">
                   <span className="role-date">{exp.date}</span>
                   <h3 className="role-title">{exp.role}</h3>
@@ -254,8 +254,8 @@ function App() {
                 </div>
                 <div className="role-details">
                   <ul>
-                    {exp.details.map((detail, i) => (
-                      <li key={i}>{detail}</li>
+                    {exp.details.map((detail) => (
+                      <li key={detail}>{detail}</li>
                     ))}
                   </ul>
                 </div>
