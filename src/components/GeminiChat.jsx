@@ -11,12 +11,21 @@ const GeminiChat = () => {
     const saved = localStorage.getItem('gemini_chat_history');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Ensure every message has a unique ID for performance (keys)
+        return parsed.map(msg => ({
+          ...msg,
+          id: msg.id || crypto.randomUUID()
+        }));
       } catch (e) {
         console.error("Failed to parse chat history", e);
       }
     }
-    return [{ role: 'model', text: "Hello! I'm Sujal's AI Assistant. Ask me anything about his experience, skills, or projects." }];
+    return [{
+      id: crypto.randomUUID(),
+      role: 'model',
+      text: "Hello! I'm Sujal's AI Assistant. Ask me anything about his experience, skills, or projects."
+    }];
   });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +52,7 @@ const GeminiChat = () => {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMessage = { role: 'user', text: input };
+    const userMessage = { id: crypto.randomUUID(), role: 'user', text: input };
     setMessages(prev => {
       const newMessages = [...prev, userMessage];
       localStorage.setItem('gemini_chat_history', JSON.stringify(newMessages));
@@ -110,7 +119,7 @@ const GeminiChat = () => {
       const text = response.text();
 
       setMessages(prev => {
-        const newMessages = [...prev, { role: 'model', text }];
+        const newMessages = [...prev, { id: crypto.randomUUID(), role: 'model', text }];
         localStorage.setItem('gemini_chat_history', JSON.stringify(newMessages));
         return newMessages;
       });
@@ -128,7 +137,7 @@ const GeminiChat = () => {
           errorMessage = `Connection Error: ${error.message || "Unknown error"}`;
       }
 
-      setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
+      setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'model', text: errorMessage }]);
       chatSessionRef.current = null;
     } finally {
       setIsLoading(false);
@@ -164,8 +173,8 @@ const GeminiChat = () => {
           </div>
 
           <div className="chat-messages">
-            {messages.map((msg, index) => (
-              <div key={index} className={`message ${msg.role}`}>
+            {messages.map((msg) => (
+              <div key={msg.id} className={`message ${msg.role}`}>
                 <div className="message-content">
                   {msg.text}
                 </div>
